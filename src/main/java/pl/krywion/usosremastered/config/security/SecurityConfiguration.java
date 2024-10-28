@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.config;
+package pl.krywion.usosremastered.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,16 @@ public class SecurityConfiguration {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/auth/login").permitAll()
+                    .requestMatchers(
+                            "/auth/**",
+                            "/swagger-ui.html",
+                            "/swagger-ui/**",
+                            "/v3/api-docs/**",
+                            "/webjars/**",
+                            "/swagger-resources/**",
+                            "/h2-console/**"
+
+                    ).permitAll()
                     .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

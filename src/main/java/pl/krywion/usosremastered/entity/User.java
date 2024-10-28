@@ -26,6 +26,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String role;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     private Date createdAt;

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.krywion.usosremastered.dto.LoginResponseDto;
 import pl.krywion.usosremastered.dto.LoginUserDto;
+import pl.krywion.usosremastered.dto.RegisterUserDto;
 import pl.krywion.usosremastered.entity.User;
 import pl.krywion.usosremastered.service.AuthenticationService;
 import pl.krywion.usosremastered.service.JwtService;
@@ -35,5 +36,11 @@ public class AuthenticationController {
         loginResponseDto.setExpiresIn(jwtService.getExpirationTime());
 
         return ResponseEntity.ok(loginResponseDto);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody RegisterUserDto registerUserDto) {
+        User registeredUser = authenticationService.signUp(registerUserDto);
+        return ResponseEntity.ok(registeredUser);
     }
 }

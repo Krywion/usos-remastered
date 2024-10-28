@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.config;
+package pl.krywion.usosremastered.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -53,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String token = authorizationHeader.substring(7);
             final String userEmail = jwtService.extractUsername(token);
 
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
             if(userEmail != null && authentication == null) {
@@ -73,6 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             handlerExceptionResolver.resolveException(request, response, null, e);
+            e.printStackTrace();
         }
     }
 }
