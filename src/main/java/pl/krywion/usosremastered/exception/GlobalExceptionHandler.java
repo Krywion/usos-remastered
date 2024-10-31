@@ -1,13 +1,16 @@
 package pl.krywion.usosremastered.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(StudyPlanNotFoundException.class)
@@ -35,4 +38,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleSecurityException(Exception ex) {
+        if (ex instanceof BadCredentialsException) {
+            return ResponseEntity.status(401).body(Map.of("error", "Invalid credentials"));
+        }
+        if (ex instanceof AuthorizationDeniedException) {
+            return ResponseEntity.status(403).body(Map.of("error", "Access denied"));
+        }
+        if (ex instanceof ExpiredJwtException) {
+            return ResponseEntity.status(401).body(Map.of("error", "Token expired"));
+        }
+        if (ex instanceof SignatureException) {
+            return ResponseEntity.status(403).body(Map.of("error", "Invalid token"));
+        }
+        return ResponseEntity.status(500).body(Map.of("error", ex.getMessage()));
+        }
 }

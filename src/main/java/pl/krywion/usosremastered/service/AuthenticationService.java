@@ -48,18 +48,14 @@ public class AuthenticationService {
     public User authenticate(LoginUserDto input) {
         System.out.println(input.getEmail());
         System.out.println(input.getPassword());
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            input.getEmail(),
-                            input.getPassword()
-                    )
-            );
-            return userRepository.findByEmail(input.getEmail()).orElseThrow();
-        } catch (Exception e) {
-            System.out.println("Invalid credentials");
-            throw new RuntimeException("Invalid credentials");
-        }
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        input.getEmail(),
+                        input.getPassword()
+                )
+        );
+        return userRepository.findByEmail(input.getEmail()).orElseThrow();
     }
 
     private String generatePassword() {
