@@ -12,10 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class StudentDto {
+    private Long albumNumber;
     private String firstName;
     private String lastName;
     private String email;
-    private String albumNumber;
     private Long studyPlanId;
     private List<Long> masterThesisIds;
 }

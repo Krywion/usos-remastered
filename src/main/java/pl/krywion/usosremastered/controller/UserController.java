@@ -40,10 +40,11 @@ public class UserController {
         return ResponseEntity.ok(currentUserDto);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserDto>> allUsers() {
         List<UserDto> users = userServiceImpl.allUsers().stream()
-                .map(user -> new UserDto(user.getId(), user.getEmail(), user.getRole()))
+                .map(user -> new UserDto(user.getId(), user.getEmail(), user.getRole().name()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(users);

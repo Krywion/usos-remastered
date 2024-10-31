@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.krywion.usosremastered.dto.LoginResponseDto;
+import pl.krywion.usosremastered.dto.response.LoginResponseDto;
 import pl.krywion.usosremastered.dto.LoginUserDto;
 import pl.krywion.usosremastered.dto.RegisterUserDto;
 import pl.krywion.usosremastered.entity.User;

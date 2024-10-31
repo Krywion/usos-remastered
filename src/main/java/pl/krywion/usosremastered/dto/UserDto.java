@@ -16,4 +16,7 @@ public class UserDto {
         this.email = email;
         this.role = role;
     }
+
+    public UserDto() {
+    }
 }

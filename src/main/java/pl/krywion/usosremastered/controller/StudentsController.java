@@ -1,17 +1,19 @@
 package pl.krywion.usosremastered.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import pl.krywion.usosremastered.dto.StudentDto;
+import pl.krywion.usosremastered.dto.response.StudentCreationResponse;
 import pl.krywion.usosremastered.service.impl.StudentServiceImpl;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/students")
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
 public class StudentsController {
 
     private final StudentServiceImpl studentService;
@@ -21,9 +23,8 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentDto> createStudent(@RequestBody StudentDto studentDto) {
-        StudentDto createdStudent = studentService.createStudent(studentDto);
-        return ResponseEntity.created(null).body(createdStudent);
+    public ResponseEntity<StudentCreationResponse> createStudent(@Valid @RequestBody StudentDto studentDto) {
+        return ResponseEntity.ok(studentService.createStudent(studentDto));
     }
 
     @GetMapping("{id}")

@@ -1,10 +1,11 @@
 package pl.krywion.usosremastered.service;
 
 import pl.krywion.usosremastered.dto.StudentDto;
+import pl.krywion.usosremastered.dto.response.StudentCreationResponse;
 
 public interface StudentService {
 
-    StudentDto createStudent(StudentDto studentDto);
+    StudentCreationResponse createStudent(StudentDto studentDto);
 
     StudentDto getStudent(Long id);
 }
