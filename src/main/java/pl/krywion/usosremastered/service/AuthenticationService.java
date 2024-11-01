@@ -20,15 +20,18 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final SendEmailService sendEmailService;
 
     public AuthenticationService(
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            SendEmailService sendEmailService
     ) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.sendEmailService = sendEmailService;
     }
 
     public User signUp(RegisterUserDto input) {
@@ -42,6 +45,10 @@ public class AuthenticationService {
         System.out.println("Generated password: " + input.getPassword());
         user.setPassword(passwordEncoder.encode(input.getPassword()));
         user.setRole(input.getRole());
+
+        // Send email with password
+        this.sendEmailService.sendEmail(user.getEmail(), "Account created", newStudentMessage(user.getEmail(), input.getPassword()));
+
         return userRepository.save(user);
     }
 
@@ -89,6 +96,15 @@ public class AuthenticationService {
         return passwordChars.stream()
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
+    }
+
+    private String newStudentMessage(String email, String password) {
+        String message = "Hello, Welcome on our University\n";
+        message += "Your account has been created\n";
+        message += "Email: " + email + "\n";
+        message += "Password: " + password + "\n";
+        message += "You can now log in to the system.";
+        return message;
     }
 
 }

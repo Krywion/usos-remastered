@@ -33,13 +33,9 @@ import java.util.stream.Collectors;
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
-
     private final StudyPlanRepository studyPlanRepository;
-
     private final AuthenticationService authenticationService;
-
     private final UserRepository userRepository;
-
     private final ModelMapper modelMapper;
 
     public StudentServiceImpl(
@@ -127,4 +123,6 @@ public class StudentServiceImpl implements StudentService {
     private boolean isValidEmail(String email) {
         return email != null && email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
     }
+
+
 }
