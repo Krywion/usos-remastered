@@ -1,11 +1,21 @@
 package pl.krywion.usosremastered.service;
 
 import pl.krywion.usosremastered.dto.StudentDto;
-import pl.krywion.usosremastered.dto.response.StudentCreationResponse;
+import pl.krywion.usosremastered.dto.response.StudentResponse;
+
+import java.util.List;
 
 public interface StudentService {
 
-    StudentCreationResponse createStudent(StudentDto studentDto);
+    StudentResponse createStudent(StudentDto studentDto);
 
-    StudentDto getStudent(Long id);
+    StudentDto getStudentByAlbumNumber(Long albumNumber);
+
+    StudentDto getStudentByEmail(String email);
+
+    List<StudentDto> getStudentsByLastName(String lastName);
+
+    List<StudentDto> getAllStudents();
+
+    StudentResponse deleteStudent(Long albumNumber);
 }

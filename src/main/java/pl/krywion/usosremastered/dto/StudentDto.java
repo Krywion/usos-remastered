@@ -18,4 +18,6 @@ public class StudentDto {
     private String email;
     private Long studyPlanId;
     private List<Long> masterThesisIds;
+
+
 }

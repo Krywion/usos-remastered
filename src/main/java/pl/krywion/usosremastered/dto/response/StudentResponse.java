@@ -6,7 +6,7 @@ import pl.krywion.usosremastered.dto.StudentDto;
 
 @Data
 @AllArgsConstructor
-public class StudentCreationResponse {
+public class StudentResponse {
     private StudentDto studentDto;
     private String message;
     private boolean success;

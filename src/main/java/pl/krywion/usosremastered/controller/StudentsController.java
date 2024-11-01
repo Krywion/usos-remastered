@@ -4,10 +4,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import pl.krywion.usosremastered.dto.StudentDto;
-import pl.krywion.usosremastered.dto.response.StudentCreationResponse;
-import pl.krywion.usosremastered.service.impl.StudentServiceImpl;
+import pl.krywion.usosremastered.dto.response.StudentResponse;
+import pl.krywion.usosremastered.service.StudentService;
 
 import java.util.List;
 
@@ -16,33 +15,45 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 public class StudentsController {
 
-    private final StudentServiceImpl studentService;
+    private final StudentService studentService;
 
-    public StudentsController(StudentServiceImpl studentService) {
+    public StudentsController(StudentService studentService) {
         this.studentService = studentService;
     }
 
     @PostMapping
-    public ResponseEntity<StudentCreationResponse> createStudent(@Valid @RequestBody StudentDto studentDto) {
-        return ResponseEntity.ok(studentService.createStudent(studentDto));
+    public ResponseEntity<StudentResponse> createStudent(@Valid @RequestBody StudentDto studentDto) {
+        StudentResponse response = studentService.createStudent(studentDto);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> getStudent(@PathVariable Long id) {
-        try {
-            StudentDto student = studentService.getStudent(id);
-            return ResponseEntity.ok(student);
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).body("Student not found");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal server error");
-        }
+    @GetMapping("/{albumNumber}")
+    public ResponseEntity<StudentDto> getStudentByAlbumNumber(@PathVariable Long albumNumber) {
+        StudentDto student = studentService.getStudentByAlbumNumber(albumNumber);
+        return ResponseEntity.ok(student);
     }
 
-
-    @GetMapping()
-    public ResponseEntity<List<StudentDto>> allStudents() {
-        List<StudentDto> students = studentService.allStudents();
+    @GetMapping("/by-lastname")
+    public ResponseEntity<List<StudentDto>> getStudentsByLastName(@RequestParam String lastname) {
+        List<StudentDto> students = studentService.getStudentsByLastName(lastname);
         return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/by-email")
+    public ResponseEntity<StudentDto> getStudentByEmail(@RequestParam String email) {
+        StudentDto student = studentService.getStudentByEmail(email);
+        return ResponseEntity.ok(student);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<StudentDto>> getAllStudents() {
+        List<StudentDto> students = studentService.getAllStudents();
+        return ResponseEntity.ok(students);
+    }
+
+    @DeleteMapping("/{albumNumber}")
+    public ResponseEntity<StudentResponse> deleteStudent(@PathVariable Long albumNumber) {
+        StudentResponse response = studentService.deleteStudent(albumNumber);
+        return ResponseEntity.ok(response);
     }
 }

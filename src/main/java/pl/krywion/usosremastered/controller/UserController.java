@@ -40,7 +40,7 @@ public class UserController {
         return ResponseEntity.ok(currentUserDto);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserDto>> allUsers() {
         List<UserDto> users = userServiceImpl.allUsers().stream()
