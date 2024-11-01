@@ -1,16 +1,12 @@
 package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 
 @Entity
 @Table(name="students")
-@Setter
-@Getter
-@ToString
+@Data
 public class Student {
 
     @Id
@@ -35,4 +31,12 @@ public class Student {
     @OneToOne
     @JoinColumn(name="master_thesis_id")
     private MasterThesis masterThesis;
+
+    public Student() {
+
+    }
+
+    public String getEmail() {
+        return user.getEmail();
+    }
 }
