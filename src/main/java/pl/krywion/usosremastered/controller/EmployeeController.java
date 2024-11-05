@@ -1,14 +1,16 @@
 package pl.krywion.usosremastered.controller;
 
-import org.springframework.http.HttpStatus;
+
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.krywion.usosremastered.entity.Employee;
+import pl.krywion.usosremastered.dto.EmployeeDto;
+import pl.krywion.usosremastered.dto.response.EmployeeResponseDto;
 import pl.krywion.usosremastered.service.EmployeeService;
 
-import java.time.LocalDate;
 
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -20,23 +22,10 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employee")
-    public ResponseEntity<Employee> getEmployee() {
-        return new ResponseEntity<>(employeeService.getEmployeeById(1L), HttpStatus.OK);
+    @PostMapping("/employee")
+    public ResponseEntity<EmployeeResponseDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
+        EmployeeResponseDto response = employeeService.createEmployee(employeeDto);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/employee/save")
-    public ResponseEntity<String> saveEmployee() {
-
-
-
-        Employee employee = new Employee();
-        employee.setFirstName("John");
-        employee.setLastName("Doe");
-        LocalDate hireDate = LocalDate.now();
-        employee.setHireDate(hireDate);
-        employee.setPesel("12345678901");
-        employeeService.saveEmployee(employee);
-        return new ResponseEntity<>("Employee saved", HttpStatus.OK);
-    }
 }

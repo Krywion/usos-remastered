@@ -1,13 +1,13 @@
 package pl.krywion.usosremastered.service;
 
 import pl.krywion.usosremastered.dto.StudentDto;
-import pl.krywion.usosremastered.dto.response.StudentResponse;
+import pl.krywion.usosremastered.dto.response.StudentResponseDto;
 
 import java.util.List;
 
 public interface StudentService {
 
-    StudentResponse createStudent(StudentDto studentDto);
+    StudentResponseDto createStudent(StudentDto studentDto);
 
     StudentDto getStudentByAlbumNumber(Long albumNumber);
 
@@ -17,5 +17,5 @@ public interface StudentService {
 
     List<StudentDto> getAllStudents();
 
-    StudentResponse deleteStudent(Long albumNumber);
+    StudentResponseDto deleteStudent(Long albumNumber);
 }

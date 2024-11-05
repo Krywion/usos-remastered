@@ -1,23 +1,18 @@
 package pl.krywion.usosremastered.service;
 
-import org.springframework.stereotype.Service;
-import pl.krywion.usosremastered.entity.Employee;
-import pl.krywion.usosremastered.repository.EmployeeRepository;
+import pl.krywion.usosremastered.dto.EmployeeDto;
+import pl.krywion.usosremastered.dto.response.EmployeeResponseDto;
 
-@Service
-public class EmployeeService {
+import java.util.List;
 
-    private final EmployeeRepository employeeRepository;
+public interface EmployeeService {
+    EmployeeResponseDto createEmployee(EmployeeDto employeeDto);
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
+    EmployeeDto getEmployeeByEmail(String email);
 
-    public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
-    }
+    List<EmployeeDto> getEmployeesByLastName(String lastName);
 
-    public Employee saveEmployee(Employee employee) {
-        return employeeRepository.save(employee);
-    }
+    List<EmployeeDto> getAllEmployees();
+
+    EmployeeResponseDto deleteEmployee(Long employeeId);
 }

@@ -44,6 +44,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body(Map.of("error", ex.getMessage()));
     }
 
+    @ExceptionHandler(EmployeeCreationException.class)
+    public ResponseEntity<Map<String, String>> handleEmployeeCreationException(EmployeeCreationException e) {
+        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleSecurityException(Exception ex) {
         if (ex instanceof BadCredentialsException) {

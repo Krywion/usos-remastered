@@ -52,4 +52,8 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Course> courses;
+
+    public String getEmail() {
+        return user.getEmail();
+    }
 }

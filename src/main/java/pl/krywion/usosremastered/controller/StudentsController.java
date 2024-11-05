@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.krywion.usosremastered.dto.StudentDto;
-import pl.krywion.usosremastered.dto.response.StudentResponse;
+import pl.krywion.usosremastered.dto.response.StudentResponseDto;
 import pl.krywion.usosremastered.service.StudentService;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class StudentsController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentResponse> createStudent(@Valid @RequestBody StudentDto studentDto) {
-        StudentResponse response = studentService.createStudent(studentDto);
+    public ResponseEntity<StudentResponseDto> createStudent(@Valid @RequestBody StudentDto studentDto) {
+        StudentResponseDto response = studentService.createStudent(studentDto);
         return ResponseEntity.ok(response);
     }
 
@@ -52,8 +52,8 @@ public class StudentsController {
     }
 
     @DeleteMapping("/{albumNumber}")
-    public ResponseEntity<StudentResponse> deleteStudent(@PathVariable Long albumNumber) {
-        StudentResponse response = studentService.deleteStudent(albumNumber);
+    public ResponseEntity<StudentResponseDto> deleteStudent(@PathVariable Long albumNumber) {
+        StudentResponseDto response = studentService.deleteStudent(albumNumber);
         return ResponseEntity.ok(response);
     }
 }
