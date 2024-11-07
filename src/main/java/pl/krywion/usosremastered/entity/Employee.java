@@ -35,10 +35,6 @@ public class Employee {
     private LocalDate hireDate;
 
     @ManyToOne
-    @JoinColumn(name = "faculty_id")
-    private Faculty faculty;
-
-    @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 

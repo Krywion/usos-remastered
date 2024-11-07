@@ -2,6 +2,7 @@ package pl.krywion.usosremastered.dto;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -12,6 +13,5 @@ public class EmployeeDto {
     private String pesel;
     private Long departmentId;
     private List<Long> courseIds;
-    private List<Long> masterThesisIds;
-
+    private LocalDate hireDate;
 }

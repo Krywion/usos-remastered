@@ -1,6 +1,7 @@
 package pl.krywion.usosremastered.validation.dto;
 
-import jakarta.validation.ValidationException;
+
+import pl.krywion.usosremastered.exception.EntityValidationException;
 import pl.krywion.usosremastered.validation.core.Validator;
 
 import java.util.ArrayList;
@@ -14,11 +15,15 @@ public abstract class AbstractDtoValidator<T> implements Validator<T> {
         errors.clear();
         validateDto(dto);
         if(!errors.isEmpty()) {
-            throw new ValidationException(String.join(", ", errors));
+            throw new EntityValidationException(
+                    getEntityClass(),
+                    new ArrayList<>(errors)
+            );
         }
     }
 
     protected abstract void validateDto(T dto);
+    protected abstract Class<?> getEntityClass();
 
     protected void addError(String error) {
         errors.add(error);

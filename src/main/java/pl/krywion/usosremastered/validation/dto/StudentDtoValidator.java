@@ -32,4 +32,9 @@ public class StudentDtoValidator extends AbstractDtoValidator<StudentDto> {
         }
 
     }
+
+    @Override
+    protected Class<?> getEntityClass() {
+        return StudentDto.class;
+    }
 }

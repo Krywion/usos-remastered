@@ -18,6 +18,8 @@ public class Institute {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-
+    @OneToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
 
 }

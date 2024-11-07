@@ -20,9 +20,13 @@ public class Faculty {
     @Column(name="postal_code", nullable = false)
     private String postalCode;
 
-    @Column(name="estamblishment_year", nullable = false)
-    private int estamblishmentYear;
+    @Column(name="establishment_year", nullable = false)
+    private Integer establishmentYear;
 
     @OneToMany(mappedBy = "faculty")
     private List<Institute> institutes;
+
+    @OneToOne
+    @JoinColumn(name = "dean_id")
+    private Dean dean;
 }
