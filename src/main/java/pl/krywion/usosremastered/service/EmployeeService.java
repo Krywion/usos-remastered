@@ -1,6 +1,7 @@
 package pl.krywion.usosremastered.service;
 
-import pl.krywion.usosremastered.dto.EmployeeDto;
+
+import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.dto.response.ApiResponse;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.dto;
+package pl.krywion.usosremastered.dto.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

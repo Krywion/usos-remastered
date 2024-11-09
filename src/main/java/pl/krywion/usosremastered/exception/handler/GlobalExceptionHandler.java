@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    // Błędy autoryzacji
+
     @ExceptionHandler({
             BadCredentialsException.class,
             ExpiredJwtException.class,
@@ -27,24 +27,24 @@ public class GlobalExceptionHandler {
             AuthorizationDeniedException.class
     })
     public ResponseEntity<ApiResponse<?>> handleAuthenticationException(Exception ex) {
-        String messege;
+        String message;
         HttpStatus status;
 
         if (ex instanceof BadCredentialsException) {
-            messege = "Invalid username or password";
+            message = "Invalid username or password";
             status = HttpStatus.UNAUTHORIZED;
         } else if (ex instanceof ExpiredJwtException) {
-            messege = "Token has expired";
+            message = "Token has expired";
             status = HttpStatus.UNAUTHORIZED;
         } else if (ex instanceof SignatureException) {
-            messege = "Invalid token signature";
+            message = "Invalid token signature";
             status = HttpStatus.UNAUTHORIZED;
         } else {
-            messege = "Access denied";
+            message = "Access denied";
             status = HttpStatus.FORBIDDEN;
         }
 
-        return new ResponseEntity<>(ApiResponse.error(messege, status), status);
+        return new ResponseEntity<>(ApiResponse.error(message, status), status);
     }
 
     @ExceptionHandler(ValidationException.class)

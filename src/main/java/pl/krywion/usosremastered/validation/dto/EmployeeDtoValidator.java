@@ -1,8 +1,7 @@
 package pl.krywion.usosremastered.validation.dto;
 
 import org.springframework.stereotype.Component;
-import pl.krywion.usosremastered.dto.EmployeeDto;
-import pl.krywion.usosremastered.entity.Department;
+import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.repository.CourseRepository;
 import pl.krywion.usosremastered.repository.DepartmentRepository;
 import pl.krywion.usosremastered.repository.UserRepository;
@@ -33,8 +32,8 @@ public class EmployeeDtoValidator extends AbstractDtoValidator<EmployeeDto> {
     @Override
     protected void validateDto(EmployeeDto dto) {
         validateBasicInformation(dto);
-        //validateOrganizationalUnits(dto);
-        //validateCourses(dto);
+        validateOrganizationalUnits(dto);
+        validateCourses(dto);
     }
 
     @Override
@@ -65,12 +64,8 @@ public class EmployeeDtoValidator extends AbstractDtoValidator<EmployeeDto> {
     }
 
     private void validateOrganizationalUnits(EmployeeDto dto) {
-        if(dto.getDepartmentId() == null) {
-            addError("Department is required");
-        } else {
-            Department department = departmentRepository.findById(dto.getDepartmentId())
-                    .orElse(null);
-            if(department == null) {
+        if(dto.getDepartmentId() != null) {
+            if(departmentRepository.findById(dto.getDepartmentId()).isEmpty()) {
                 addError("Department not found with id: " + dto.getDepartmentId());
             }
         }

@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 @DiscriminatorValue("Dean")
 public class Dean extends Employee{
 
-    @Column(name = "year_of_election", nullable = true)
+    @Column(name = "year_of_election")
     private Integer yearOfElection;
 
-    @OneToOne
-    @JoinColumn(name = "faculty_id")
-    private Faculty faculty;
 }

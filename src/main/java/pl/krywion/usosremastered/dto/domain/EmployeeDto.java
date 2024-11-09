@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.dto;
+package pl.krywion.usosremastered.dto.domain;
 
 import lombok.Data;
 
@@ -12,6 +12,7 @@ public class EmployeeDto {
     private String email;
     private String pesel;
     private Long departmentId;
+    private String departmentName;
     private List<Long> courseIds;
     private LocalDate hireDate;
 }

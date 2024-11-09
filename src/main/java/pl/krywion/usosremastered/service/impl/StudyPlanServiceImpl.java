@@ -2,7 +2,7 @@ package pl.krywion.usosremastered.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import pl.krywion.usosremastered.dto.StudyPlanDto;
+import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
 import pl.krywion.usosremastered.entity.StudyPlan;
 import pl.krywion.usosremastered.repository.StudyPlanRepository;
 import pl.krywion.usosremastered.service.StudyPlanService;

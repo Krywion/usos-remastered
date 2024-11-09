@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import pl.krywion.usosremastered.dto.EmployeeDto;
+import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.dto.response.ApiResponse;
 import pl.krywion.usosremastered.service.EmployeeService;
 

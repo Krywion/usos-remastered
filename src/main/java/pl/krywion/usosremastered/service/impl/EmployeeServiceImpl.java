@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.config.security.Role;
-import pl.krywion.usosremastered.dto.EmployeeDto;
-import pl.krywion.usosremastered.dto.RegisterUserDto;
+import pl.krywion.usosremastered.dto.domain.EmployeeDto;
+import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.dto.response.ApiResponse;
 import pl.krywion.usosremastered.entity.Course;
 import pl.krywion.usosremastered.entity.Department;
@@ -58,10 +58,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ApiResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
         employeeValidator.validate(employeeDto);
 
-        Department department = departmentRepository.findById(employeeDto.getDepartmentId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Department with id %d not found", employeeDto.getDepartmentId())
-                ));
+        Department department = null;
+        if(employeeDto.getDepartmentId() != null) {
+            department = departmentRepository.findById(employeeDto.getDepartmentId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            String.format("Department with id %d not found", employeeDto.getDepartmentId())
+                    ));
+        }
+
+
 
         List<Course> courses = new ArrayList<>();
         if (employeeDto.getCourseIds() != null && !employeeDto.getCourseIds().isEmpty()) {
@@ -74,7 +79,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         try {
-            Employee employee = modelMapper.map(employeeDto, Employee.class);
+            Employee employee = modelMapper.map(
+                    employeeDto,
+                    Employee.class
+            );
             employee.setHireDate(LocalDate.now());
             employee.setDepartment(department);
             employee.setCourses(courses);
@@ -86,9 +94,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             User createdUser = authenticationService.signUp(registerUserDto);
             employee.setUser(createdUser);
 
+
+
             Employee savedEmployee = employeeRepository.save(employee);
             EmployeeDto createdEmployeeDto = modelMapper.map(savedEmployee, EmployeeDto.class);
-
+            createdEmployeeDto.setDepartmentName(department != null ? department.getName() : null);
+            createdEmployeeDto.setDepartmentId(department != null ? department.getId() : null);
             log.info("Employee created successfully: {}", savedEmployee);
 
             return ApiResponse.success(
@@ -125,6 +136,5 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ApiResponse<EmployeeDto> deleteEmployee(Long employeeId) {
         return null;
     }
-
 
 }

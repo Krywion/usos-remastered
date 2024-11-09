@@ -1,7 +1,7 @@
 package pl.krywion.usosremastered.validation.dto;
 
 import org.springframework.stereotype.Component;
-import pl.krywion.usosremastered.dto.StudentDto;
+import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.repository.UserRepository;
 import pl.krywion.usosremastered.validation.validators.EmailValidator;
 

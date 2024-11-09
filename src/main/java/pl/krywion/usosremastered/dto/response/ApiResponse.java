@@ -35,13 +35,13 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> error(
             String message,
             HttpStatus httpStatus,
-            Map<String, Object> data) {
+            Map<String, Object> details) {
         ApiResponse<T> response = new ApiResponse<>();
         response.setData(null);
         response.setMessage(message);
         response.setSuccess(false);
         response.setHttpStatus(httpStatus);
-        response.setDetails(data);
+        response.setDetails(details);
         return response;
     }
 

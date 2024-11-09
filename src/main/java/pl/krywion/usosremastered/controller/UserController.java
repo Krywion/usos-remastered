@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.krywion.usosremastered.dto.UserDto;
+import pl.krywion.usosremastered.dto.domain.UserDto;
 import pl.krywion.usosremastered.entity.User;
 import pl.krywion.usosremastered.service.impl.UserServiceImpl;
 
