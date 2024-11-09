@@ -35,10 +35,6 @@ public class Employee {
     private LocalDate hireDate;
 
     @ManyToOne
-    @JoinColumn(name = "faculty_id")
-    private Faculty faculty;
-
-    @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
@@ -52,4 +48,8 @@ public class Employee {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Course> courses;
+
+    public String getEmail() {
+        return user.getEmail();
+    }
 }

@@ -4,8 +4,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.krywion.usosremastered.dto.LoginUserDto;
-import pl.krywion.usosremastered.dto.RegisterUserDto;
+import pl.krywion.usosremastered.dto.auth.LoginUserDto;
+import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.entity.User;
 import pl.krywion.usosremastered.repository.UserRepository;
 
@@ -76,18 +76,15 @@ public class AuthenticationService {
         StringBuilder password = new StringBuilder();
         Random random = new Random();
 
-        // Ensure at least one character from each category
         password.append(upperCaseLetters.charAt(random.nextInt(upperCaseLetters.length())));
         password.append(lowerCaseLetters.charAt(random.nextInt(lowerCaseLetters.length())));
         password.append(digits.charAt(random.nextInt(digits.length())));
         password.append(specialCharacters.charAt(random.nextInt(specialCharacters.length())));
 
-        // Fill the remaining characters
         for (int i = 4; i < length; i++) {
             password.append(allCharacters.charAt(random.nextInt(allCharacters.length())));
         }
 
-        // Shuffle the characters
         List<Character> passwordChars = password.chars()
                 .mapToObj(c -> (char) c)
                 .collect(Collectors.toList());

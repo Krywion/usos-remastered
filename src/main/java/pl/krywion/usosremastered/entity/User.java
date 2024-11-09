@@ -1,7 +1,6 @@
 package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,8 +22,6 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Email(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
-            message = "Niepoprawny format adresu email")
     private String email;
 
     @Column(nullable = false)

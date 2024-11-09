@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.krywion.usosremastered.config.security.Role;
-import pl.krywion.usosremastered.dto.RegisterUserDto;
-import pl.krywion.usosremastered.dto.StudyPlanDto;
+import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
+import pl.krywion.usosremastered.dto.domain.DepartmentDto;
+import pl.krywion.usosremastered.dto.domain.FacultyDto;
+import pl.krywion.usosremastered.dto.domain.InstituteDto;
+import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
 import pl.krywion.usosremastered.service.AuthenticationService;
+import pl.krywion.usosremastered.service.OrganizationalStructureService;
 import pl.krywion.usosremastered.service.StudyPlanService;
 
 @Component
@@ -19,19 +23,74 @@ public class DataInitializer implements CommandLineRunner {
 
     private final AuthenticationService authenticationService;
     private final StudyPlanService studyPlanService;
+    private final OrganizationalStructureService organizationalStructureService;
 
     public DataInitializer(
             AuthenticationService authenticationService,
-            StudyPlanService studyPlanService
+            StudyPlanService studyPlanService,
+            OrganizationalStructureService organizationalStructureService
     ) {
         this.authenticationService = authenticationService;
         this.studyPlanService = studyPlanService;
+        this.organizationalStructureService = organizationalStructureService;
     }
 
     @Override
     public void run(String... args) {
         addDefaultUser();
         addStudyPlans();
+        addOrganizationalUnits();
+    }
+
+    private void addOrganizationalUnits() {
+        FacultyDto facultyDto = new FacultyDto();
+        facultyDto.setName("Faculty of Mathematics and Computer Science");
+        facultyDto.setPostalCode("00-000");
+        facultyDto.setEstablishmentYear(1990);
+        facultyDto.setDeanId(null);
+        facultyDto.setDeanName(null);
+
+        organizationalStructureService.createFaculty(facultyDto);
+
+        InstituteDto instituteDto = new InstituteDto();
+        instituteDto.setName("Institute of Mathematics");
+        instituteDto.setFacultyId(1L);
+        instituteDto.setManagerId(null);
+        instituteDto.setManagerName(null);
+
+        organizationalStructureService.createInstitute(instituteDto);
+
+        instituteDto = new InstituteDto();
+        instituteDto.setName("Institute of Computer Science");
+        instituteDto.setFacultyId(1L);
+        instituteDto.setManagerId(null);
+        instituteDto.setManagerName(null);
+
+        organizationalStructureService.createInstitute(instituteDto);
+
+        DepartmentDto departmentDto = new DepartmentDto();
+        departmentDto.setName("Department of Algebra");
+        departmentDto.setInstituteId(1L);
+
+        organizationalStructureService.createDepartment(departmentDto);
+
+        departmentDto = new DepartmentDto();
+        departmentDto.setName("Department of Geometry");
+        departmentDto.setInstituteId(1L);
+
+        organizationalStructureService.createDepartment(departmentDto);
+
+        departmentDto = new DepartmentDto();
+        departmentDto.setName("Department of Computer Science");
+        departmentDto.setInstituteId(2L);
+
+        organizationalStructureService.createDepartment(departmentDto);
+
+        departmentDto = new DepartmentDto();
+        departmentDto.setName("Department of Software Engineering");
+        departmentDto.setInstituteId(2L);
+
+        organizationalStructureService.createDepartment(departmentDto);
     }
 
     private void addDefaultUser() {
@@ -58,6 +117,5 @@ public class DataInitializer implements CommandLineRunner {
         StudyPlanDto biology = new StudyPlanDto();
         biology.setName("Biology");
         studyPlanService.createStudyPlan(biology);
-
     }
 }

@@ -1,6 +1,6 @@
 package pl.krywion.usosremastered.service;
 
-import pl.krywion.usosremastered.dto.StudyPlanDto;
+import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
 
 import java.util.List;
 

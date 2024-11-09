@@ -1,28 +1,27 @@
 package pl.krywion.usosremastered.service.impl;
 
-import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.config.security.Role;
-import pl.krywion.usosremastered.dto.RegisterUserDto;
-import pl.krywion.usosremastered.dto.StudentDto;
-import pl.krywion.usosremastered.dto.response.StudentResponse;
+import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
+import pl.krywion.usosremastered.dto.domain.StudentDto;
+import pl.krywion.usosremastered.dto.response.ApiResponse;
 import pl.krywion.usosremastered.entity.Student;
 import pl.krywion.usosremastered.entity.StudyPlan;
 import pl.krywion.usosremastered.entity.User;
-import pl.krywion.usosremastered.exception.StudentCreationException;
-import pl.krywion.usosremastered.exception.StudentNotFoundException;
-import pl.krywion.usosremastered.exception.StudyPlanNotFoundException;
-import pl.krywion.usosremastered.exception.UserNotFoundException;
+import pl.krywion.usosremastered.exception.ResourceNotFoundException;
+import pl.krywion.usosremastered.exception.ValidationException;
+import pl.krywion.usosremastered.exception.base.BaseException;
 import pl.krywion.usosremastered.repository.StudentRepository;
 import pl.krywion.usosremastered.repository.StudyPlanRepository;
 import pl.krywion.usosremastered.repository.UserRepository;
 import pl.krywion.usosremastered.service.AuthenticationService;
 import pl.krywion.usosremastered.service.StudentService;
+import pl.krywion.usosremastered.validation.dto.StudentDtoValidator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,118 +34,150 @@ public class StudentServiceImpl implements StudentService {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final StudentDtoValidator studentValidator;
 
     public StudentServiceImpl(
             StudentRepository studentRepository,
             StudyPlanRepository studyPlanRepository,
             AuthenticationService authenticationService,
             UserRepository userRepository,
+            StudentDtoValidator studentValidator,
             ModelMapper modelMapper
     ) {
         this.studentRepository = studentRepository;
         this.studyPlanRepository = studyPlanRepository;
         this.authenticationService = authenticationService;
         this.userRepository = userRepository;
+        this.studentValidator = studentValidator;
         this.modelMapper = modelMapper;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public StudentResponse createStudent(StudentDto studentDto) {
+    public ApiResponse<StudentDto> createStudent(StudentDto studentDto) {
         try {
-            validateStudentDto(studentDto);
+            studentValidator.validate(studentDto);
 
             Student student = modelMapper.map(studentDto, Student.class);
 
             StudyPlan studyPlan = studyPlanRepository.findById(studentDto.getStudyPlanId())
-                    .orElseThrow(() -> new StudyPlanNotFoundException(studentDto.getStudyPlanId()));
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            String.format("Study plan with ID %d not found", studentDto.getStudyPlanId())
+                            ));
             student.setStudyPlan(studyPlan);
 
             RegisterUserDto registerUserDto = new RegisterUserDto();
 
             registerUserDto.setEmail(studentDto.getEmail());
             registerUserDto.setRole(Role.STUDENT);
+            User user = authenticationService.signUp(registerUserDto);
 
-            this.authenticationService.signUp(registerUserDto);
-
-            User user = userRepository.findByEmail(registerUserDto.getEmail()).orElseThrow(() -> new UserNotFoundException(registerUserDto.getEmail()));
             student.setUser(user);
 
-            studentRepository.save(student);
-            log.info("Student created: {}", student);
+            Student savedStudent = studentRepository.save(student);
+            StudentDto createdStudentDto = modelMapper.map(savedStudent, StudentDto.class);
 
-            return new StudentResponse(modelMapper.map(student, StudentDto.class), "Student created", true);
+            log.info("Student created successfully: {}", createdStudentDto);
+
+            return ApiResponse.success(
+                    createdStudentDto,
+                    "Student created successfully",
+                    HttpStatus.CREATED
+            );
+
         } catch (Exception e) {
-            log.error("Validation error: {}", e.getMessage());
-            throw new StudentCreationException("Could not create student: " + e.getMessage(), e);
+            if(e instanceof BaseException) {
+                throw e;
+            }
+
+            log.error("Failed to create student: ", e);
+            throw new ValidationException("Failed to create student: " + e.getMessage());
         }
     }
 
-    public StudentDto getStudentByAlbumNumber(Long albumNumber) {
+    public ApiResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber) {
         Student student = studentRepository.findById(albumNumber)
-                .orElseThrow(() -> new StudentNotFoundException(albumNumber));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                String.format("Student with album number %d not found", albumNumber)
+        ));
 
-        return modelMapper.map(student, StudentDto.class);
+        return ApiResponse.success(
+                modelMapper.map(student, StudentDto.class),
+                "Student found successfully",
+                HttpStatus.OK
+        );
     }
 
-    public StudentDto getStudentByEmail(String email) {
+    public ApiResponse<StudentDto> getStudentByEmail(String email) {
         Student student = studentRepository.findByUserEmailIgnoreCase(email)
-                .orElseThrow(() -> new StudentNotFoundException(email));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Student with email %s not found", email)
+                ));
 
-        return modelMapper.map(student, StudentDto.class);
+        return ApiResponse.success(
+                modelMapper.map(student, StudentDto.class),
+                "Student found successfully",
+                HttpStatus.OK
+        );
     }
 
     @Override
-    public List<StudentDto> getStudentsByLastName(String lastName) {
-        return studentRepository.findByLastNameIgnoreCase(lastName).stream()
+    public ApiResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
+        List<StudentDto> students = studentRepository.findByLastNameIgnoreCase(lastName)
+                .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
-                .collect(Collectors.toList());
+                .toList();
+
+        if(students.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("No students found with last name: %s", lastName)
+            );
+        }
+
+        return ApiResponse.success(
+                students,
+                "Students found successfully",
+                HttpStatus.OK
+        );
     }
 
 
-    public List<StudentDto> getAllStudents() {
-        return studentRepository.findAll().stream()
+    @Override
+    public ApiResponse<List<StudentDto>> getAllStudents() {
+        List<StudentDto> students = studentRepository.findAll()
+                .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .collect(Collectors.toList());
+
+        return ApiResponse.success(
+                students,
+                "All students retrieved successfully",
+                HttpStatus.OK
+        );
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    @Override
-    public StudentResponse deleteStudent(Long albumNumber) {
-        Student student = studentRepository.findById(albumNumber
-        ).orElseThrow(() -> new StudentNotFoundException(albumNumber));
+    public ApiResponse<StudentDto> deleteStudent(Long albumNumber) {
+        Student student = studentRepository.findById(albumNumber)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Student with album number %d not found", albumNumber)
+                ));
 
         User user = student.getUser();
-        userRepository.delete(user);
+        if (user != null) {
+            userRepository.delete(user);
+        }
+
         studentRepository.delete(student);
+        log.info("Student deleted successfully: {}", student);
 
-        log.info("Student deleted: {}", student);
-
-        return new StudentResponse(modelMapper.map(student, StudentDto.class), "Student deleted", true);
+        return ApiResponse.success(
+                modelMapper.map(student, StudentDto.class),
+                "Student deleted successfully",
+                HttpStatus.OK
+        );
     }
 
-    private void validateStudentDto(StudentDto studentDto) {
-        List<String> errors = new ArrayList<>();
-
-        if (studentDto.getEmail() == null || !isValidEmail(studentDto.getEmail())) {
-            errors.add("Email is required");
-        }
-
-        if (studentDto.getStudyPlanId() == null) {
-            errors.add("Study plan is required");
-        }
-
-        if (userRepository.existsByEmail(studentDto.getEmail())) {
-            errors.add("User with this email already exists");
-        }
-
-        if (!errors.isEmpty()) {
-            throw new ValidationException(String.join(", ", errors));
-        }
-    }
-
-    private boolean isValidEmail(String email) {
-        return email != null && email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$");
-    }
 
 
 }
