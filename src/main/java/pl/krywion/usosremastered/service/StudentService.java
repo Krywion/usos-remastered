@@ -1,27 +1,27 @@
 package pl.krywion.usosremastered.service;
 
 import pl.krywion.usosremastered.dto.domain.StudentDto;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 
 import java.util.List;
 
 public interface StudentService {
 
-    ApiResponse<StudentDto> createStudent(StudentDto studentDto);
+    ServiceResponse<StudentDto> createStudent(StudentDto studentDto);
 
-    ApiResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber);
+    ServiceResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber);
 
-    ApiResponse<StudentDto> getStudentByEmail(String email);
+    ServiceResponse<StudentDto> getStudentByEmail(String email);
 
-    ApiResponse<List<StudentDto>> getStudentsByLastName(String lastName);
+    ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName);
 
-    ApiResponse<List<StudentDto>> getAllStudents();
+    ServiceResponse<List<StudentDto>> getAllStudents();
 
-    ApiResponse<StudentDto> deleteStudent(Long albumNumber);
+    ServiceResponse<StudentDto> deleteStudent(Long albumNumber);
 
-    ApiResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto);
+    ServiceResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto);
 
-    ApiResponse<List<StudentDto>> getStudentsByFirstName(String firstName);
+    ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName);
 
-    ApiResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName);
+    ServiceResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName);
 }

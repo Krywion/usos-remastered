@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.config.security.Role;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.entity.Course;
 import pl.krywion.usosremastered.entity.Department;
 import pl.krywion.usosremastered.entity.Employee;
@@ -55,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ApiResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
+    public ServiceResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
         employeeValidator.validate(employeeDto);
 
         Department department = null;
@@ -102,7 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             createdEmployeeDto.setDepartmentId(department != null ? department.getId() : null);
             log.info("Employee created successfully: {}", savedEmployee);
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     createdEmployeeDto,
                     "Employee created successfully",
                     HttpStatus.CREATED
@@ -118,22 +118,22 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ApiResponse<EmployeeDto> getEmployeeByEmail(String email) {
+    public ServiceResponse<EmployeeDto> getEmployeeByEmail(String email) {
         return null;
     }
 
     @Override
-    public ApiResponse<List<EmployeeDto>> getEmployeesByLastName(String lastName) {
+    public ServiceResponse<List<EmployeeDto>> getEmployeesByLastName(String lastName) {
         return null;
     }
 
     @Override
-    public ApiResponse<List<EmployeeDto>> getAllEmployees() {
+    public ServiceResponse<List<EmployeeDto>> getAllEmployees() {
         return null;
     }
 
     @Override
-    public ApiResponse<EmployeeDto> deleteEmployee(Long employeeId) {
+    public ServiceResponse<EmployeeDto> deleteEmployee(Long employeeId) {
         return null;
     }
 

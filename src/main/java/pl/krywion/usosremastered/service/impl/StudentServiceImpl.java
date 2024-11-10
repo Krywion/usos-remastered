@@ -8,7 +8,7 @@ import pl.krywion.usosremastered.config.security.Role;
 import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.entity.Student;
 import pl.krywion.usosremastered.entity.StudyPlan;
 import pl.krywion.usosremastered.entity.User;
@@ -51,7 +51,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ApiResponse<StudentDto> createStudent(StudentDto studentDto) {
+    public ServiceResponse<StudentDto> createStudent(StudentDto studentDto) {
         try {
             studentValidator.validate(studentDto);
 
@@ -75,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
 
             log.info("Student created successfully: {}", savedStudent);
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     studentMapper.toDto(savedStudent),
                     "Student created successfully",
                     HttpStatus.CREATED
@@ -91,26 +91,26 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    public ApiResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber) {
+    public ServiceResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber) {
         Student student = studentRepository.findById(albumNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
                 String.format("Student with album number %d not found", albumNumber)
         ));
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDto(student),
                 "Student found successfully",
                 HttpStatus.OK
         );
     }
 
-    public ApiResponse<StudentDto> getStudentByEmail(String email) {
+    public ServiceResponse<StudentDto> getStudentByEmail(String email) {
         Student student = studentRepository.findByUserEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Student with email %s not found", email)
                 ));
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDto(student),
                 "Student found successfully",
                 HttpStatus.OK
@@ -118,10 +118,10 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ApiResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
+    public ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
         List<Student> students = studentRepository.findByLastNameIgnoreCase(lastName);
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDtoList(students),
                 "Students found successfully",
                 HttpStatus.OK
@@ -130,10 +130,10 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public ApiResponse<List<StudentDto>> getAllStudents() {
+    public ServiceResponse<List<StudentDto>> getAllStudents() {
         List<Student> students = studentRepository.findAll();
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDtoList(students),
                 "All students retrieved successfully",
                 HttpStatus.OK
@@ -142,7 +142,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ApiResponse<StudentDto> deleteStudent(Long albumNumber) {
+    public ServiceResponse<StudentDto> deleteStudent(Long albumNumber) {
         Student student = studentRepository.findById(albumNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Student with album number %d not found", albumNumber)
@@ -156,7 +156,7 @@ public class StudentServiceImpl implements StudentService {
         studentRepository.delete(student);
         log.info("Student deleted successfully: {}", student);
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDto(student),
                 "Student deleted successfully",
                 HttpStatus.OK
@@ -164,7 +164,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ApiResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto) {
+    public ServiceResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto) {
         try {
             studentValidator.validateForUpdate(studentDto, albumNumber);
 
@@ -191,7 +191,7 @@ public class StudentServiceImpl implements StudentService {
             Student updatedStudent = studentRepository.save(student);
             log.info("Student updated successfully: {}", updatedStudent);
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     studentMapper.toDto(updatedStudent),
                     "Student updated successfully",
                     HttpStatus.OK
@@ -207,7 +207,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ApiResponse<List<StudentDto>> getStudentsByFirstName(String firstName) {
+    public ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName) {
         List<Student> students = studentRepository.findByFirstNameIgnoreCase(firstName);
 
         if (students.isEmpty()) {
@@ -216,7 +216,7 @@ public class StudentServiceImpl implements StudentService {
             );
         }
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDtoList(students),
                 "Students found successfully",
                 HttpStatus.OK
@@ -224,7 +224,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ApiResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName) {
+    public ServiceResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName) {
         List<Student> students = studentRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName);
 
         if (students.isEmpty()) {
@@ -233,7 +233,7 @@ public class StudentServiceImpl implements StudentService {
             );
         }
 
-        return ApiResponse.success(
+        return ServiceResponse.success(
                 studentMapper.toDtoList(students),
                 "Students found successfully",
                 HttpStatus.OK

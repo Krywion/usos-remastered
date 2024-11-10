@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.krywion.usosremastered.dto.domain.DepartmentDto;
 import pl.krywion.usosremastered.dto.domain.FacultyDto;
 import pl.krywion.usosremastered.dto.domain.InstituteDto;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.entity.Dean;
 import pl.krywion.usosremastered.entity.Department;
 import pl.krywion.usosremastered.entity.Faculty;
@@ -48,7 +48,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
     }
 
     @Override
-    public ApiResponse<List<FacultyDto>> getAllFaculties() {
+    public ServiceResponse<List<FacultyDto>> getAllFaculties() {
         try {
             List<Faculty> faculties = facultyRepository.findAll();
             List<FacultyDto> facultyDtos = faculties.stream()
@@ -59,7 +59,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
                     })
                     .toList();
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     facultyDtos,
                     "Faculties retrieved successfully",
                     HttpStatus.OK
@@ -71,16 +71,16 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
     }
 
     @Override
-    public ApiResponse<List<InstituteDto>> getInstitutesForFaculty(Long facultyId) {
+    public ServiceResponse<List<InstituteDto>> getInstitutesForFaculty(Long facultyId) {
         return null;
     }
 
     @Override
-    public ApiResponse<DepartmentDto> getDepartmentsForInstitute(Long instituteId) {
+    public ServiceResponse<DepartmentDto> getDepartmentsForInstitute(Long instituteId) {
         return null;
     }
 
-    public ApiResponse<FacultyDto> createFaculty(FacultyDto facultyDto) {
+    public ServiceResponse<FacultyDto> createFaculty(FacultyDto facultyDto) {
         try {
             Faculty faculty = new Faculty();
             faculty.setName(facultyDto.getName());
@@ -103,7 +103,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
                 savedDto.setDeanName(savedFaculty.getDean().getFirstName() + " " + savedFaculty.getDean().getLastName());
             }
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     savedDto,
                     "Faculty created successfully",
                     HttpStatus.CREATED
@@ -114,7 +114,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
         }
     }
 
-    public ApiResponse<InstituteDto> createInstitute(InstituteDto instituteDto) {
+    public ServiceResponse<InstituteDto> createInstitute(InstituteDto instituteDto) {
         try {
             Faculty faculty = facultyRepository.findById(instituteDto.getFacultyId())
                     .orElseThrow(() -> new ResourceNotFoundException(
@@ -129,7 +129,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
             InstituteDto savedDto = modelMapper.map(savedInstitute, InstituteDto.class);
             savedDto.setFacultyId(faculty.getId());
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     savedDto,
                     "Institute created successfully",
                     HttpStatus.CREATED
@@ -144,7 +144,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
         }
     }
 
-    public ApiResponse<DepartmentDto> createDepartment(DepartmentDto departmentDto) {
+    public ServiceResponse<DepartmentDto> createDepartment(DepartmentDto departmentDto) {
         try {
             Institute institute = instituteRepository.findById(departmentDto.getInstituteId())
                     .orElseThrow(() -> new ResourceNotFoundException(
@@ -159,7 +159,7 @@ public class OrganizationalStructureImpl implements OrganizationalStructureServi
             DepartmentDto savedDto = modelMapper.map(savedDepartment, DepartmentDto.class);
             savedDto.setInstituteId(institute.getId());
 
-            return ApiResponse.success(
+            return ServiceResponse.success(
                     savedDto,
                     "Department created successfully",
                     HttpStatus.CREATED

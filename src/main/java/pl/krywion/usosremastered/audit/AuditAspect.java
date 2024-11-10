@@ -5,7 +5,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.util.UserContextProvider;
 
 @Aspect
@@ -25,8 +25,8 @@ public class AuditAspect {
             returning = "result"
     )
     public void auditCreate(Object result) {
-        if ( result instanceof ApiResponse) {
-            Object data = ((ApiResponse<?>) result).getData();
+        if ( result instanceof ServiceResponse) {
+            Object data = ((ServiceResponse<?>) result).getData();
             publishAuditEvent(data, null, AuditAction.CREATE);
         }
     }
@@ -36,10 +36,10 @@ public class AuditAspect {
             returning = "result"
     )
     public void auditUpdate(Object result) {
-        if ( result instanceof ApiResponse) {
-            Object data = ((ApiResponse<?>) result).getData();
+        if ( result instanceof ServiceResponse) {
+            Object data = ((ServiceResponse<?>) result).getData();
 
-            publishAuditEvent(data, ((ApiResponse<?>) result).getData().toString(), AuditAction.UPDATE);
+            publishAuditEvent(data, ((ServiceResponse<?>) result).getData().toString(), AuditAction.UPDATE);
         }
     }
 
@@ -48,8 +48,8 @@ public class AuditAspect {
             returning = "result"
     )
     public void auditDelete(Object result) {
-        if ( result instanceof ApiResponse) {
-            Object data = ((ApiResponse<?>) result).getData();
+        if ( result instanceof ServiceResponse) {
+            Object data = ((ServiceResponse<?>) result).getData();
             publishAuditEvent(data, null, AuditAction.DELETE);
         }
     }

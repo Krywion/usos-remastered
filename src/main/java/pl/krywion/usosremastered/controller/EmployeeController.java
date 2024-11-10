@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.service.EmployeeService;
 
 
@@ -25,8 +25,8 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<EmployeeDto>> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
-        ApiResponse<EmployeeDto> response = employeeService.createEmployee(employeeDto);
+    public ResponseEntity<ServiceResponse<EmployeeDto>> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
+        ServiceResponse<EmployeeDto> response = employeeService.createEmployee(employeeDto);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
