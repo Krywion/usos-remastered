@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import pl.krywion.usosremastered.audit.Identifiable;
 
 import java.util.List;
 
@@ -11,7 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class StudentDto {
+public class StudentDto implements Identifiable {
+
     private Long albumNumber;
     private String firstName;
     private String lastName;
@@ -20,4 +22,8 @@ public class StudentDto {
     private List<Long> masterThesisIds;
 
 
+    @Override
+    public Long getIdentifier() {
+        return albumNumber;
+    }
 }

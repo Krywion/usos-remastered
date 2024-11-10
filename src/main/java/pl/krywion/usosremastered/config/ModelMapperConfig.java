@@ -15,13 +15,11 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        // Wyłączamy automatyczne mapowanie dla pól, które chcemy mapować ręcznie
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
-        // Definiujemy własne mapowanie dla Faculty -> FacultyDto
         PropertyMap<Faculty, FacultyDto> facultyMap = new PropertyMap<>() {
             @Override
             protected void configure() {

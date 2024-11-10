@@ -18,4 +18,6 @@ public interface StudentService {
     ApiResponse<List<StudentDto>> getAllStudents();
 
     ApiResponse<StudentDto> deleteStudent(Long albumNumber);
+
+    ApiResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto);
 }

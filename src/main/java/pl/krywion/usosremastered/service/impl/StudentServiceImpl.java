@@ -1,13 +1,13 @@
 package pl.krywion.usosremastered.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.config.security.Role;
 import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
+import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
 import pl.krywion.usosremastered.dto.response.ApiResponse;
 import pl.krywion.usosremastered.entity.Student;
 import pl.krywion.usosremastered.entity.StudyPlan;
@@ -23,7 +23,6 @@ import pl.krywion.usosremastered.service.StudentService;
 import pl.krywion.usosremastered.validation.dto.StudentDtoValidator;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,8 +32,8 @@ public class StudentServiceImpl implements StudentService {
     private final StudyPlanRepository studyPlanRepository;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
     private final StudentDtoValidator studentValidator;
+    private final StudentMapper studentMapper;
 
     public StudentServiceImpl(
             StudentRepository studentRepository,
@@ -42,14 +41,13 @@ public class StudentServiceImpl implements StudentService {
             AuthenticationService authenticationService,
             UserRepository userRepository,
             StudentDtoValidator studentValidator,
-            ModelMapper modelMapper
-    ) {
+            StudentMapper studentMapper) {
         this.studentRepository = studentRepository;
         this.studyPlanRepository = studyPlanRepository;
         this.authenticationService = authenticationService;
         this.userRepository = userRepository;
         this.studentValidator = studentValidator;
-        this.modelMapper = modelMapper;
+        this.studentMapper = studentMapper;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -57,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
         try {
             studentValidator.validate(studentDto);
 
-            Student student = modelMapper.map(studentDto, Student.class);
+            Student student = studentMapper.toEntity(studentDto);
 
             StudyPlan studyPlan = studyPlanRepository.findById(studentDto.getStudyPlanId())
                     .orElseThrow(() -> new ResourceNotFoundException(
@@ -74,12 +72,11 @@ public class StudentServiceImpl implements StudentService {
             student.setUser(user);
 
             Student savedStudent = studentRepository.save(student);
-            StudentDto createdStudentDto = modelMapper.map(savedStudent, StudentDto.class);
 
-            log.info("Student created successfully: {}", createdStudentDto);
+            log.info("Student created successfully: {}", savedStudent);
 
             return ApiResponse.success(
-                    createdStudentDto,
+                    studentMapper.toDto(savedStudent),
                     "Student created successfully",
                     HttpStatus.CREATED
             );
@@ -101,7 +98,7 @@ public class StudentServiceImpl implements StudentService {
         ));
 
         return ApiResponse.success(
-                modelMapper.map(student, StudentDto.class),
+                studentMapper.toDto(student),
                 "Student found successfully",
                 HttpStatus.OK
         );
@@ -114,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
                 ));
 
         return ApiResponse.success(
-                modelMapper.map(student, StudentDto.class),
+                studentMapper.toDto(student),
                 "Student found successfully",
                 HttpStatus.OK
         );
@@ -122,19 +119,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ApiResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
-        List<StudentDto> students = studentRepository.findByLastNameIgnoreCase(lastName)
-                .stream()
-                .map(student -> modelMapper.map(student, StudentDto.class))
-                .toList();
-
-        if(students.isEmpty()) {
-            throw new ResourceNotFoundException(
-                    String.format("No students found with last name: %s", lastName)
-            );
-        }
+        List<Student> students = studentRepository.findByLastNameIgnoreCase(lastName);
 
         return ApiResponse.success(
-                students,
+                studentMapper.toDtoList(students),
                 "Students found successfully",
                 HttpStatus.OK
         );
@@ -143,13 +131,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ApiResponse<List<StudentDto>> getAllStudents() {
-        List<StudentDto> students = studentRepository.findAll()
-                .stream()
-                .map(student -> modelMapper.map(student, StudentDto.class))
-                .collect(Collectors.toList());
+        List<Student> students = studentRepository.findAll();
 
         return ApiResponse.success(
-                students,
+                studentMapper.toDtoList(students),
                 "All students retrieved successfully",
                 HttpStatus.OK
         );
@@ -172,12 +157,54 @@ public class StudentServiceImpl implements StudentService {
         log.info("Student deleted successfully: {}", student);
 
         return ApiResponse.success(
-                modelMapper.map(student, StudentDto.class),
+                studentMapper.toDto(student),
                 "Student deleted successfully",
                 HttpStatus.OK
         );
     }
 
+    @Override
+    public ApiResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto) {
+        try {
+            studentValidator.validateForUpdate(studentDto, albumNumber);
+
+            Student student = studentRepository.findById(albumNumber)
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            String.format("Student with album number %d not found", albumNumber)
+                    ));
+
+            student.setFirstName(studentDto.getFirstName());
+            student.setLastName(studentDto.getLastName());
+
+            StudyPlan studyPlan = studyPlanRepository.findById(studentDto.getStudyPlanId())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            String.format("Study plan with ID %d not found", studentDto.getStudyPlanId())
+                    ));
+
+            student.setStudyPlan(studyPlan);
+
+            if(!student.getEmail().equals(studentDto.getEmail())) {
+                User user = student.getUser();
+                user.setEmail(studentDto.getEmail());
+            }
+
+            Student updatedStudent = studentRepository.save(student);
+            log.info("Student updated successfully: {}", updatedStudent);
+
+            return ApiResponse.success(
+                    studentMapper.toDto(updatedStudent),
+                    "Student updated successfully",
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            if(e instanceof BaseException) {
+                throw e;
+            }
+
+            log.error("Failed to update student: ", e);
+            throw new ValidationException("Failed to update student: " + e.getMessage());
+        }
+    }
 
 
 }

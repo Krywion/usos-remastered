@@ -11,7 +11,7 @@ import pl.krywion.usosremastered.service.StudentService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/api/students")
 @PreAuthorize("hasRole('ADMIN')")
 public class StudentsController {
 
@@ -54,6 +54,12 @@ public class StudentsController {
     @DeleteMapping("/{albumNumber}")
     public ResponseEntity<ApiResponse<StudentDto>> deleteStudent(@PathVariable Long albumNumber) {
         ApiResponse<StudentDto> response = studentService.deleteStudent(albumNumber);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    @PutMapping("/{albumNumber}")
+    public ResponseEntity<ApiResponse<StudentDto>> updateStudent(@PathVariable Long albumNumber, @Valid @RequestBody StudentDto studentDto) {
+        ApiResponse<StudentDto> response = studentService.updateStudent(albumNumber, studentDto);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 }
