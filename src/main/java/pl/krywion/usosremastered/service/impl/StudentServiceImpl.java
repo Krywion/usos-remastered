@@ -206,5 +206,39 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Override
+    public ApiResponse<List<StudentDto>> getStudentsByFirstName(String firstName) {
+        List<Student> students = studentRepository.findByFirstNameIgnoreCase(firstName);
+
+        if (students.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("No students found with first name: %s", firstName)
+            );
+        }
+
+        return ApiResponse.success(
+                studentMapper.toDtoList(students),
+                "Students found successfully",
+                HttpStatus.OK
+        );
+    }
+
+    @Override
+    public ApiResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName) {
+        List<Student> students = studentRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName);
+
+        if (students.isEmpty()) {
+            throw new ResourceNotFoundException(
+                    String.format("No students found with first name: %s and last name: %s", firstName, lastName)
+            );
+        }
+
+        return ApiResponse.success(
+                studentMapper.toDtoList(students),
+                "Students found successfully",
+                HttpStatus.OK
+        );
+    }
+
 
 }

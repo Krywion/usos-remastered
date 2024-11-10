@@ -20,4 +20,8 @@ public interface StudentService {
     ApiResponse<StudentDto> deleteStudent(Long albumNumber);
 
     ApiResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto);
+
+    ApiResponse<List<StudentDto>> getStudentsByFirstName(String firstName);
+
+    ApiResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName);
 }

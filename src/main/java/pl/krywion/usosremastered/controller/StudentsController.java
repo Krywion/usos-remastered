@@ -62,4 +62,16 @@ public class StudentsController {
         ApiResponse<StudentDto> response = studentService.updateStudent(albumNumber, studentDto);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
+
+    @GetMapping("/by-firstname")
+    public ResponseEntity<ApiResponse<List<StudentDto>>> getStudentsByFirstName(@RequestParam String firstName) {
+        ApiResponse<List<StudentDto>> response = studentService.getStudentsByFirstName(firstName);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<StudentDto>>> getStudentsByFirstNameAndLastName(@RequestParam String firstName, @RequestParam String lastName) {
+        ApiResponse<List<StudentDto>> response = studentService.getStudentsByFirstNameAndLastName(firstName, lastName);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
 }
