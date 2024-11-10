@@ -15,7 +15,7 @@ import pl.krywion.usosremastered.service.impl.UserServiceImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RestController
 @PreAuthorize("isAuthenticated()")
 public class UserController {
