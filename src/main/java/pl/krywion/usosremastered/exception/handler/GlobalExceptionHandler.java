@@ -8,7 +8,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.exception.EntityValidationException;
 import pl.krywion.usosremastered.exception.ValidationException;
 import pl.krywion.usosremastered.exception.base.BaseException;
@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
             SignatureException.class,
             AuthorizationDeniedException.class
     })
-    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(Exception ex) {
+    public ResponseEntity<ServiceResponse<?>> handleAuthenticationException(Exception ex) {
         String message;
         HttpStatus status;
 
@@ -44,25 +44,25 @@ public class GlobalExceptionHandler {
             status = HttpStatus.FORBIDDEN;
         }
 
-        return new ResponseEntity<>(ApiResponse.error(message, status), status);
+        return new ResponseEntity<>(ServiceResponse.error(message, status), status);
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiResponse<?>> handleValidationException(ValidationException ex) {
-        ApiResponse<?> response;
+    public ResponseEntity<ServiceResponse<?>> handleValidationException(ValidationException ex) {
+        ServiceResponse<?> response;
 
         if (ex instanceof EntityValidationException eve) {
             Map<String, Object> details = new HashMap<>();
             details.put("entityType", eve.getEntityClass().getSimpleName());
             details.put("validationErrors", eve.getValidationErrors());
 
-            response = ApiResponse.error(
+            response = ServiceResponse.error(
                     ex.getMessage(),
                     ex.getHttpStatus(),
                     details
             );
         } else {
-            response = ApiResponse.error(
+            response = ServiceResponse.error(
                     ex.getMessage(),
                     ex.getHttpStatus()
             );
@@ -74,8 +74,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ApiResponse<?>> handleBaseException(BaseException ex) {
-        ApiResponse<?> response = ApiResponse.error(
+    public ResponseEntity<ServiceResponse<?>> handleBaseException(BaseException ex) {
+        ServiceResponse<?> response = ServiceResponse.error(
                 ex.getMessage(),
                 ex.getHttpStatus()
         );
@@ -83,8 +83,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleUnexpectedException(Exception ex) {
-        ApiResponse<?> response = ApiResponse.error(
+    public ResponseEntity<ServiceResponse<?>> handleUnexpectedException(Exception ex) {
+        ServiceResponse<?> response = ServiceResponse.error(
             "An unexpected error occurred" + ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );

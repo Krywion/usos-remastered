@@ -12,7 +12,7 @@ import pl.krywion.usosremastered.service.impl.StudyPlanServiceImpl;
 import java.util.List;
 
 @RestController
-@RequestMapping("/student-plan")
+@RequestMapping("/api/student-plan")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class StudyPlanController {
 

@@ -1,9 +1,11 @@
 package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "master_theses")
+@Data
 public class MasterThesis {
 
     @Id

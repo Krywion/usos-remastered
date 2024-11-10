@@ -2,6 +2,7 @@ package pl.krywion.usosremastered.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.krywion.usosremastered.repository.UserRepository;
 
 @Configuration
+@EnableAspectJAutoProxy
 public class ApplicationConfiguration {
     private final UserRepository userRepository;
 

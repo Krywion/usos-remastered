@@ -2,18 +2,18 @@ package pl.krywion.usosremastered.service;
 
 
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 
 import java.util.List;
 
 public interface EmployeeService {
-    ApiResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto);
+    ServiceResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto);
 
-    ApiResponse<EmployeeDto> getEmployeeByEmail(String email);
+    ServiceResponse<EmployeeDto> getEmployeeByEmail(String email);
 
-    ApiResponse<List<EmployeeDto>> getEmployeesByLastName(String lastName);
+    ServiceResponse<List<EmployeeDto>> getEmployeesByLastName(String lastName);
 
-    ApiResponse<List<EmployeeDto>> getAllEmployees();
+    ServiceResponse<List<EmployeeDto>> getAllEmployees();
 
-    ApiResponse<EmployeeDto> deleteEmployee(Long employeeId);
+    ServiceResponse<EmployeeDto> deleteEmployee(Long employeeId);
 }

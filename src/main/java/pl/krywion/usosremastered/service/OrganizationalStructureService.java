@@ -4,20 +4,20 @@ package pl.krywion.usosremastered.service;
 import pl.krywion.usosremastered.dto.domain.DepartmentDto;
 import pl.krywion.usosremastered.dto.domain.FacultyDto;
 import pl.krywion.usosremastered.dto.domain.InstituteDto;
-import pl.krywion.usosremastered.dto.response.ApiResponse;
+import pl.krywion.usosremastered.dto.response.ServiceResponse;
 
 import java.util.List;
 
 public interface OrganizationalStructureService {
-    ApiResponse<List<FacultyDto>> getAllFaculties();
+    ServiceResponse<List<FacultyDto>> getAllFaculties();
 
-    ApiResponse<List<InstituteDto>> getInstitutesForFaculty(Long facultyId);
+    ServiceResponse<List<InstituteDto>> getInstitutesForFaculty(Long facultyId);
 
-    ApiResponse<DepartmentDto> getDepartmentsForInstitute(Long instituteId);
+    ServiceResponse<DepartmentDto> getDepartmentsForInstitute(Long instituteId);
 
-    ApiResponse<FacultyDto> createFaculty(FacultyDto facultyDto);
+    ServiceResponse<FacultyDto> createFaculty(FacultyDto facultyDto);
 
-    ApiResponse<InstituteDto> createInstitute(InstituteDto instituteDto);
+    ServiceResponse<InstituteDto> createInstitute(InstituteDto instituteDto);
 
-    ApiResponse<DepartmentDto> createDepartment(DepartmentDto departmentDto);
+    ServiceResponse<DepartmentDto> createDepartment(DepartmentDto departmentDto);
 }
