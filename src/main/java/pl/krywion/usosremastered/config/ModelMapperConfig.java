@@ -29,7 +29,7 @@ public class ModelMapperConfig {
                 map().setName(source.getName());
                 map().setPostalCode(source.getPostalCode());
                 map().setEstablishmentYear(source.getEstablishmentYear());
-                map(source.getDean().getId(), destination.getDeanId());
+                map(source.getDean().getPesel(), destination.getDeanId());
             }
         };
 

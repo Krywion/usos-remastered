@@ -21,7 +21,7 @@ public class AuditLog {
     private String entityType;
 
     @Column(nullable = false)
-    private Long entityId;
+    private String entityId;
 
     @Column(nullable = false)
     private String action;

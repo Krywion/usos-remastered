@@ -7,7 +7,7 @@ import lombok.Getter;
 @Builder
 public class AuditEvent {
     private final String entityType;
-    private final Long entityId;
+    private final String entityId;
     private final AuditAction action;
     private final String field;
     private final String oldValue;

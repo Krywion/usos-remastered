@@ -14,16 +14,12 @@ import java.util.List;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
-    private Long id;
+    @Column(name = "pesel", nullable = false, unique = true)
+    private String pesel;
 
     @OneToOne
     @JoinColumn(name="user_id")
     private User user;
-
-    @Column(name = "pesel", nullable = false, unique = true)
-    private String pesel;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
