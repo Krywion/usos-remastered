@@ -26,6 +26,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
@@ -91,6 +92,8 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public ServiceResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber) {
         Student student = studentRepository.findById(albumNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -104,6 +107,8 @@ public class StudentServiceImpl implements StudentService {
         );
     }
 
+    @Transactional(readOnly = true)
+    @Override
     public ServiceResponse<StudentDto> getStudentByEmail(String email) {
         Student student = studentRepository.findByUserEmailIgnoreCase(email)
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -118,6 +123,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
         List<Student> students = studentRepository.findByLastNameIgnoreCase(lastName);
 
@@ -130,6 +136,7 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResponse<List<StudentDto>> getAllStudents() {
         List<Student> students = studentRepository.findAll();
 
@@ -164,6 +171,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<StudentDto> updateStudent(Long albumNumber, StudentDto studentDto) {
         try {
             studentValidator.validateForUpdate(studentDto, albumNumber);
@@ -207,6 +215,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName) {
         List<Student> students = studentRepository.findByFirstNameIgnoreCase(firstName);
 
@@ -224,6 +233,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName) {
         List<Student> students = studentRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName);
 
