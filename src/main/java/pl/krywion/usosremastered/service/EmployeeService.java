@@ -7,13 +7,20 @@ import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import java.util.List;
 
 public interface EmployeeService {
+
     ServiceResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto);
+
+    ServiceResponse<List<EmployeeDto>> getAllEmployees();
+
+    ServiceResponse<EmployeeDto> updateEmployee(String pesel, EmployeeDto employeeDto);
+
+    ServiceResponse<EmployeeDto> deleteEmployee(String pesel);
 
     ServiceResponse<EmployeeDto> getEmployeeByEmail(String email);
 
     ServiceResponse<List<EmployeeDto>> getEmployeesByLastName(String lastName);
 
-    ServiceResponse<List<EmployeeDto>> getAllEmployees();
+    ServiceResponse<EmployeeDto> getEmployeeByPesel(String pesel);
 
-    ServiceResponse<EmployeeDto> deleteEmployee(Long employeeId);
+    ServiceResponse<List<EmployeeDto>> getEmployeeByFirstName(String firstName);
 }
