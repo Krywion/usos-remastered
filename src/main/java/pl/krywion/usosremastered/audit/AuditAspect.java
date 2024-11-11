@@ -77,13 +77,13 @@ public class AuditAspect {
 
     }
 
-    private Long getEntityId(Object entity) {
+    private String getEntityId(Object entity) {
         try {
             if(entity instanceof Identifiable) {
                 return ((Identifiable) entity).getIdentifier();
             }
             try {
-                return (Long) entity.getClass().getMethod("getId").invoke(entity);
+                return entity.getClass().getMethod("getId").invoke(entity).toString();
             } catch (Exception e) {
                 log.error("Error while getting entity id", e);
                 return null;

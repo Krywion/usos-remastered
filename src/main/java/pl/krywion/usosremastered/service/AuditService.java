@@ -33,7 +33,7 @@ public class AuditService {
         auditLogRepository.save(auditLog);
     }
 
-    public List<AuditLog> getAuditLogsForEntity(String entityType, Long entityId) {
+    public List<AuditLog> getAuditLogsForEntity(String entityType, String entityId) {
         return auditLogRepository.findByEntityTypeAndEntityId(entityType, entityId);
     }
 }
