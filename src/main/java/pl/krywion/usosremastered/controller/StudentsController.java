@@ -16,6 +16,10 @@ import pl.krywion.usosremastered.service.StudentService;
 
 import java.util.List;
 
+// TODO 1: refactor the get methods to search for entities that contain the search term for:
+//  - last name
+//  - first name
+
 @RestController
 @RequestMapping("/api/students")
 @PreAuthorize("hasRole('ADMIN')")

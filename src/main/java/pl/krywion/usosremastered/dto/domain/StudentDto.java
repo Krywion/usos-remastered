@@ -36,7 +36,7 @@ public class StudentDto implements Identifiable {
 
 
     @Override
-    public Long getIdentifier() {
-        return albumNumber;
+    public String getIdentifier() {
+        return albumNumber.toString();
     }
 }

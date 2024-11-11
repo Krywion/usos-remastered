@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.config.security.Role;
-import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
@@ -17,9 +16,8 @@ import pl.krywion.usosremastered.exception.ValidationException;
 import pl.krywion.usosremastered.exception.base.BaseException;
 import pl.krywion.usosremastered.repository.StudentRepository;
 import pl.krywion.usosremastered.repository.StudyPlanRepository;
-import pl.krywion.usosremastered.repository.UserRepository;
-import pl.krywion.usosremastered.service.AuthenticationService;
 import pl.krywion.usosremastered.service.StudentService;
+import pl.krywion.usosremastered.service.UserService;
 import pl.krywion.usosremastered.validation.dto.StudentDtoValidator;
 
 import java.util.List;
@@ -31,24 +29,22 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
     private final StudyPlanRepository studyPlanRepository;
-    private final AuthenticationService authenticationService;
-    private final UserRepository userRepository;
     private final StudentDtoValidator studentValidator;
     private final StudentMapper studentMapper;
+    private final UserService userService;
 
     public StudentServiceImpl(
             StudentRepository studentRepository,
             StudyPlanRepository studyPlanRepository,
-            AuthenticationService authenticationService,
-            UserRepository userRepository,
             StudentDtoValidator studentValidator,
-            StudentMapper studentMapper) {
+            StudentMapper studentMapper,
+            UserService userService
+    ) {
         this.studentRepository = studentRepository;
         this.studyPlanRepository = studyPlanRepository;
-        this.authenticationService = authenticationService;
-        this.userRepository = userRepository;
         this.studentValidator = studentValidator;
         this.studentMapper = studentMapper;
+        this.userService = userService;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -64,12 +60,7 @@ public class StudentServiceImpl implements StudentService {
                             ));
             student.setStudyPlan(studyPlan);
 
-            RegisterUserDto registerUserDto = new RegisterUserDto();
-
-            registerUserDto.setEmail(studentDto.getEmail());
-            registerUserDto.setRole(Role.STUDENT);
-            User user = authenticationService.signUp(registerUserDto);
-
+            User user = userService.createUser(studentDto.getEmail(), Role.STUDENT);
             student.setUser(user);
 
             Student savedStudent = studentRepository.save(student);
@@ -92,49 +83,6 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public ServiceResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber) {
-        Student student = studentRepository.findById(albumNumber)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                String.format("Student with album number %d not found", albumNumber)
-        ));
-
-        return ServiceResponse.success(
-                studentMapper.toDto(student),
-                "Student found successfully",
-                HttpStatus.OK
-        );
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public ServiceResponse<StudentDto> getStudentByEmail(String email) {
-        Student student = studentRepository.findByUserEmailIgnoreCase(email)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Student with email %s not found", email)
-                ));
-
-        return ServiceResponse.success(
-                studentMapper.toDto(student),
-                "Student found successfully",
-                HttpStatus.OK
-        );
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
-        List<Student> students = studentRepository.findByLastNameIgnoreCase(lastName);
-
-        return ServiceResponse.success(
-                studentMapper.toDtoList(students),
-                "Students found successfully",
-                HttpStatus.OK
-        );
-    }
-
-
     @Override
     @Transactional(readOnly = true)
     public ServiceResponse<List<StudentDto>> getAllStudents() {
@@ -143,29 +91,6 @@ public class StudentServiceImpl implements StudentService {
         return ServiceResponse.success(
                 studentMapper.toDtoList(students),
                 "All students retrieved successfully",
-                HttpStatus.OK
-        );
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public ServiceResponse<StudentDto> deleteStudent(Long albumNumber) {
-        Student student = studentRepository.findById(albumNumber)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Student with album number %d not found", albumNumber)
-                ));
-
-        User user = student.getUser();
-        if (user != null) {
-            userRepository.delete(user);
-        }
-
-        studentRepository.delete(student);
-        log.info("Student deleted successfully: {}", student);
-
-        return ServiceResponse.success(
-                studentMapper.toDto(student),
-                "Student deleted successfully",
                 HttpStatus.OK
         );
     }
@@ -212,6 +137,69 @@ public class StudentServiceImpl implements StudentService {
             log.error("Failed to update student: ", e);
             throw new ValidationException("Failed to update student: " + e.getMessage());
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<StudentDto> deleteStudent(Long albumNumber) {
+        Student student = studentRepository.findById(albumNumber)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Student with album number %d not found", albumNumber)
+                ));
+
+        userService.deleteUser(student.getUser().getEmail());
+
+        studentRepository.delete(student);
+        log.info("Student deleted successfully: {}", student);
+
+        return ServiceResponse.success(
+                studentMapper.toDto(student),
+                "Student deleted successfully",
+                HttpStatus.OK
+        );
+    }
+
+
+    @Transactional(readOnly = true)
+    @Override
+    public ServiceResponse<StudentDto> getStudentByAlbumNumber(Long albumNumber) {
+        Student student = studentRepository.findById(albumNumber)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                String.format("Student with album number %d not found", albumNumber)
+        ));
+
+        return ServiceResponse.success(
+                studentMapper.toDto(student),
+                "Student found successfully",
+                HttpStatus.OK
+        );
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ServiceResponse<StudentDto> getStudentByEmail(String email) {
+        Student student = studentRepository.findByUserEmailIgnoreCase(email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Student with email %s not found", email)
+                ));
+
+        return ServiceResponse.success(
+                studentMapper.toDto(student),
+                "Student found successfully",
+                HttpStatus.OK
+        );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName) {
+        List<Student> students = studentRepository.findByLastNameIgnoreCase(lastName);
+
+        return ServiceResponse.success(
+                studentMapper.toDtoList(students),
+                "Students found successfully",
+                HttpStatus.OK
+        );
     }
 
     @Override
