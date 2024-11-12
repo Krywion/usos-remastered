@@ -12,6 +12,7 @@ import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.entity.Student;
 import pl.krywion.usosremastered.entity.StudyPlan;
 import pl.krywion.usosremastered.entity.User;
+import pl.krywion.usosremastered.exception.EntityValidationException;
 import pl.krywion.usosremastered.exception.ResourceNotFoundException;
 import pl.krywion.usosremastered.exception.ValidationException;
 import pl.krywion.usosremastered.repository.StudentRepository;
@@ -32,8 +33,9 @@ public class StudentCommandHandler {
     private final StudentMapper mapper;
 
     public ServiceResponse<StudentDto> handle(CreateStudentCommand command) {
-        validator.validate(command.studentDto());
         try {
+            validator.validate(command.studentDto());
+
             Student student = mapper.toEntity(command.studentDto());
             setupStudentRelations(student, command.studentDto());
 
@@ -44,21 +46,17 @@ public class StudentCommandHandler {
                     "Student created successfully",
                     HttpStatus.CREATED
             );
+        } catch (EntityValidationException e) {
+            throw e;
         } catch (Exception e) {
-            log.error("Error creating student", e);
-            if(e instanceof ValidationException) {
-                log.error("Validation error creating student", e);
-                throw e;
-            } else {
-                log.error("Error creating student", e);
-                throw new RuntimeException("RuntimeException Error creating student: " + e.getMessage());
-            }
+            log.error("Unexpected error while creating student", e);
+            throw new RuntimeException("Error creating student: " + e.getMessage());
         }
     }
 
     public ServiceResponse<StudentDto> handle(UpdateStudentCommand command) {
         try {
-        validator.validateForUpdate(command.studentDto());
+        validator.validateForUpdate(command.studentDto(), command.albumNumber());
 
         Student student = studentRepository.findById(command.albumNumber())
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -73,12 +71,11 @@ public class StudentCommandHandler {
                 "Student updated successfully",
                 HttpStatus.OK
         );
+        } catch (EntityValidationException e) {
+            throw e;
         } catch (Exception e) {
-            log.error("Error updating student", e);
-            if(e instanceof ValidationException || e instanceof ResourceNotFoundException) {
-                throw e;
-            }
-            throw new ValidationException("Error updating student: " + e.getMessage());
+            log.error("Unexpected error while updating student", e);
+            throw new RuntimeException("Error updating student: " + e.getMessage());
         }
     }
 
