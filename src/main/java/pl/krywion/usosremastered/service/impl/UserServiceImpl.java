@@ -36,7 +36,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(String email, Role role) {
-        return null;
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found with email: " + email));
+        user.setRole(role);
+        return userRepository.save(user);
     }
 
     public User deleteUser(String email) {

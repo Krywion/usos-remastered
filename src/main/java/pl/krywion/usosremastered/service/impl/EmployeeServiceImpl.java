@@ -124,7 +124,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<EmployeeDto> updateEmployee(String pesel, EmployeeDto employeeDto) {
         try {
-            employeeValidator.validateForUpdate(employeeDto, pesel);
+            employeeValidator.validateForUpdate(employeeDto);
 
             Employee employee = employeeRepository.findByPesel(pesel)
                     .orElseThrow(() -> new ResourceNotFoundException(

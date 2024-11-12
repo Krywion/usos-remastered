@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service;
+package pl.krywion.usosremastered.service.student;
 
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
@@ -22,6 +22,4 @@ public interface StudentService {
     ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName);
 
     ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName);
-
-    ServiceResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName);
 }
