@@ -43,6 +43,22 @@ public class EmployeeDtoValidator extends AbstractDtoValidator<EmployeeDto> {
     }
 
     @Override
+    public void validateForUpdateDto(EmployeeDto dto) {
+        Employee existingEmployee = employeeRepository.findByPesel(dto.getPesel())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+
+        boolean isEmailChanged = !existingEmployee.getEmail().equals(dto.getEmail());
+
+        if (!existingEmployee.getPesel().equals(dto.getPesel())) {
+            addError("PESEL cannot be modified");
+        }
+
+        validateBasicInformation(dto, isEmailChanged);
+        validateOrganizationalUnits(dto);
+        validateCourses(dto);
+    }
+
+    @Override
     protected Class<?> getEntityClass() {
         return EmployeeDto.class;
     }
@@ -87,18 +103,5 @@ public class EmployeeDtoValidator extends AbstractDtoValidator<EmployeeDto> {
         }
     }
 
-    public void validateForUpdate(EmployeeDto dto, String pesel) {
-        Employee existingEmployee = employeeRepository.findByPesel(pesel)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
-        boolean isEmailChanged = !existingEmployee.getEmail().equals(dto.getEmail());
-
-        if (!existingEmployee.getPesel().equals(dto.getPesel())) {
-            addError("PESEL cannot be modified");
-        }
-
-        validateBasicInformation(dto, isEmailChanged);
-        validateOrganizationalUnits(dto);
-        validateCourses(dto);
-    }
 }
