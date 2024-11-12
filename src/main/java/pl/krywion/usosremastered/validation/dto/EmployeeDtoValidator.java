@@ -43,7 +43,7 @@ public class EmployeeDtoValidator extends AbstractDtoValidator<EmployeeDto> {
     }
 
     @Override
-    public void validateForUpdateDto(EmployeeDto dto) {
+    public void validateForUpdateDto(EmployeeDto dto, Object pesel) {
         Employee existingEmployee = employeeRepository.findByPesel(dto.getPesel())
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
