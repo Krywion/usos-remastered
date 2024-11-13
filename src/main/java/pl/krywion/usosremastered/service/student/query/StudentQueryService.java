@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service.student;
+package pl.krywion.usosremastered.service.student.query;
 
 import org.springframework.stereotype.Service;
 import pl.krywion.usosremastered.dto.domain.StudentDto;

@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service;
+package pl.krywion.usosremastered.service.common;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service;
+package pl.krywion.usosremastered.service.common;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +11,8 @@ import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.entity.User;
 import pl.krywion.usosremastered.exception.ResourceNotFoundException;
 import pl.krywion.usosremastered.repository.UserRepository;
+import pl.krywion.usosremastered.service.NotificationService;
+import pl.krywion.usosremastered.service.PasswordManagementService;
 
 @Service
 @RequiredArgsConstructor

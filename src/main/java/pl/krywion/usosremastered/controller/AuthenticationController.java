@@ -9,8 +9,8 @@ import pl.krywion.usosremastered.dto.response.LoginResponseDto;
 import pl.krywion.usosremastered.dto.auth.LoginUserDto;
 import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
 import pl.krywion.usosremastered.entity.User;
-import pl.krywion.usosremastered.service.AuthenticationService;
-import pl.krywion.usosremastered.service.JwtService;
+import pl.krywion.usosremastered.service.common.AuthenticationService;
+import pl.krywion.usosremastered.service.common.JwtService;
 
 @RestController
 @RequestMapping("/auth")

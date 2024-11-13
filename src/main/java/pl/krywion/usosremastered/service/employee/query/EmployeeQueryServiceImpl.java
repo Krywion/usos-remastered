@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service.employee;
+package pl.krywion.usosremastered.service.employee.query;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

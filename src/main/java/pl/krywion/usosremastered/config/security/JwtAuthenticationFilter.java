@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import pl.krywion.usosremastered.service.JwtService;
+import pl.krywion.usosremastered.service.common.JwtService;
 
 import java.io.IOException;
 

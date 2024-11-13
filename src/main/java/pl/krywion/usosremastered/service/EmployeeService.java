@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service.employee;
+package pl.krywion.usosremastered.service;
 
 
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;

@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
-import pl.krywion.usosremastered.service.student.StudentService;
+import pl.krywion.usosremastered.service.StudentService;
 
 import java.util.List;
 

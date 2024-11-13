@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service.student;
+package pl.krywion.usosremastered.service;
 
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
