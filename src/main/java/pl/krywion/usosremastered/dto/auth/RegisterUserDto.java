@@ -15,5 +15,4 @@ public class RegisterUserDto {
     public RegisterUserDto() {
     }
 
-
 }

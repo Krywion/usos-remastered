@@ -16,10 +16,6 @@ import pl.krywion.usosremastered.service.StudentService;
 
 import java.util.List;
 
-// TODO 1: refactor the get methods to search for entities that contain the search term for:
-//  - last name
-//  - first name
-
 @RestController
 @RequestMapping("/api/students")
 @PreAuthorize("hasRole('ADMIN')")
@@ -174,25 +170,6 @@ public class StudentsController {
     @GetMapping("/by-firstname")
     public ResponseEntity<ServiceResponse<List<StudentDto>>> getStudentsByFirstName(@RequestParam String firstName) {
         ServiceResponse<List<StudentDto>> response = studentService.getStudentsByFirstName(firstName);
-        return ResponseEntity.status(response.getHttpStatus()).body(response);
-    }
-
-    @Operation(
-            summary = "Search students by full name",
-            description = "Retrieves all students matching both first name and last name"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Students found",
-                    content = @Content(schema = @Schema(implementation = List.class))
-            ),
-            @ApiResponse(responseCode = "404", description = "No students found matching criteria"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN role")
-    })
-    @GetMapping("/search")
-    public ResponseEntity<ServiceResponse<List<StudentDto>>> getStudentsByFirstNameAndLastName(@RequestParam String firstName, @RequestParam String lastName) {
-        ServiceResponse<List<StudentDto>> response = studentService.getStudentsByFirstNameAndLastName(firstName, lastName);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 }

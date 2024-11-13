@@ -22,6 +22,4 @@ public interface StudentService {
     ServiceResponse<List<StudentDto>> getStudentsByLastName(String lastName);
 
     ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName);
-
-    ServiceResponse<List<StudentDto>> getStudentsByFirstNameAndLastName(String firstName, String lastName);
 }

@@ -2,13 +2,14 @@ package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Table(name="courses")
-public class Course {
+public class Course extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -28,4 +29,19 @@ public class Course {
 
     @ManyToMany(mappedBy = "courses")
     private List<Employee> employees;
+
+    @Override
+    public String getIdentifier() {
+        return id.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", capacityLimit=" + capacityLimit +
+                ", ects=" + ects +
+                '}';
+    }
 }

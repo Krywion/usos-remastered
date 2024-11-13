@@ -1,7 +1,9 @@
 package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import pl.krywion.usosremastered.audit.AuditAction;
 
 import java.time.LocalDateTime;
 
@@ -9,35 +11,33 @@ import java.time.LocalDateTime;
 @Table(name = "audit_log")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class AuditLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "entity_type", nullable = false)
     private String entityType;
 
-    @Column(nullable = false)
+    @Column(name = "entity_id", nullable = false)
     private String entityId;
 
-    @Column(nullable = false)
-    private String action;
+    @Column(name = "action", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AuditAction action;
 
-    @Column(nullable = false)
-    private String field;
-
-    @Column(name = "old_value")
-    private String oldValue;
-
-    @Column(name = "new_value")
-    private String newValue;
-
-    @Column(nullable = false)
+    @Column(name = "modified_by", nullable = false)
     private String modifiedBy;
 
-    @Column(nullable = false)
+    @Column(name = "modified_at", nullable = false)
     private LocalDateTime modifiedAt;
+
+    @Column(name = "changes", columnDefinition = "TEXT")
+    private String changes;
+
+    @Column(name = "old_value", columnDefinition = "TEXT")
+    private String oldValue;
+
+    @Column(name = "new_value", columnDefinition = "TEXT")
+    private String newValue;
 }

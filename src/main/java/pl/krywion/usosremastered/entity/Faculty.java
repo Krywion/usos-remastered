@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Faculty {
+public class Faculty extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +36,19 @@ public class Faculty {
     @OneToOne
     @JoinColumn(name = "dean_id")
     private Dean dean;
+
+    @Override
+    public String getIdentifier() {
+        return id.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Faculty{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", establishmentYear=" + establishmentYear +
+                '}';
+    }
 }

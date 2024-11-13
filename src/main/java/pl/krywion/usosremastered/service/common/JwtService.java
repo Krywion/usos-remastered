@@ -1,4 +1,4 @@
-package pl.krywion.usosremastered.service;
+package pl.krywion.usosremastered.service.common;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

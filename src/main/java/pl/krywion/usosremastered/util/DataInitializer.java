@@ -1,5 +1,6 @@
 package pl.krywion.usosremastered.util;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -9,11 +10,12 @@ import pl.krywion.usosremastered.dto.domain.DepartmentDto;
 import pl.krywion.usosremastered.dto.domain.FacultyDto;
 import pl.krywion.usosremastered.dto.domain.InstituteDto;
 import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
-import pl.krywion.usosremastered.service.AuthenticationService;
+import pl.krywion.usosremastered.service.common.AuthenticationService;
 import pl.krywion.usosremastered.service.OrganizationalStructureService;
 import pl.krywion.usosremastered.service.StudyPlanService;
 
 @Component
+@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
     @Value("${dev.email}")
@@ -24,16 +26,6 @@ public class DataInitializer implements CommandLineRunner {
     private final AuthenticationService authenticationService;
     private final StudyPlanService studyPlanService;
     private final OrganizationalStructureService organizationalStructureService;
-
-    public DataInitializer(
-            AuthenticationService authenticationService,
-            StudyPlanService studyPlanService,
-            OrganizationalStructureService organizationalStructureService
-    ) {
-        this.authenticationService = authenticationService;
-        this.studyPlanService = studyPlanService;
-        this.organizationalStructureService = organizationalStructureService;
-    }
 
     @Override
     public void run(String... args) {

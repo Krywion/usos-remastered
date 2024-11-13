@@ -14,6 +14,16 @@ public abstract class AbstractDtoValidator<T> implements Validator<T> {
     public void validate(T dto) {
         errors.clear();
         validateDto(dto);
+        throwIfErrors();
+    }
+
+    public void validateForUpdate(T dto, Object id) {
+        errors.clear();
+        validateForUpdateDto(dto, id);
+        throwIfErrors();
+    }
+
+    private void throwIfErrors() {
         if(!errors.isEmpty()) {
             throw new EntityValidationException(
                     getEntityClass(),
@@ -23,6 +33,7 @@ public abstract class AbstractDtoValidator<T> implements Validator<T> {
     }
 
     protected abstract void validateDto(T dto);
+    protected abstract void validateForUpdateDto(T dto, Object id);
     protected abstract Class<?> getEntityClass();
 
     protected void addError(String error) {
