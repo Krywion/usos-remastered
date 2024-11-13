@@ -1,12 +1,15 @@
 package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 @Entity
 @Table(name = "master_theses")
-@Data
-public class MasterThesis {
+@Getter
+@Setter
+public class MasterThesis extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +28,18 @@ public class MasterThesis {
     @ManyToOne
     @JoinColumn(name = "promoter_id")
     private Employee promoter;
+
+    @Override
+    public String getIdentifier() {
+        return id.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "MasterThesis{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", academicYear=" + academicYear +
+                '}';
+    }
 }

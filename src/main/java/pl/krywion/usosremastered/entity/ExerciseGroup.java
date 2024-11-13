@@ -1,10 +1,11 @@
 package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 @Entity
 @Table(name="exercise_groups")
-public class ExerciseGroup {
+public class ExerciseGroup extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,4 +17,9 @@ public class ExerciseGroup {
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @Override
+    public String getIdentifier() {
+        return id.toString();
+    }
 }

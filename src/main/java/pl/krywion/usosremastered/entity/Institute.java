@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Institute {
+public class Institute extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +35,16 @@ public class Institute {
     @JoinColumn(name = "manager_id")
     private Employee manager;
 
+    @Override
+    public String getIdentifier() {
+        return id.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Institute{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

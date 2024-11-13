@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Department {
+public class Department extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,17 @@ public class Department {
 
     @OneToMany(mappedBy = "department")
     private List<Employee> employees;
+
+    @Override
+    public String getIdentifier() {
+        return id.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

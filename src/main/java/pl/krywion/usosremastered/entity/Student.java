@@ -2,12 +2,14 @@ package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.krywion.usosremastered.audit.AuditableEntity;
 
 
 @Entity
 @Table(name="students")
-@Data
-public class Student {
+@Getter
+@Setter
+public class Student extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +40,22 @@ public class Student {
 
     public String getEmail() {
         return user.getEmail();
+    }
+
+    @Override
+    public String getIdentifier() {
+        return albumNumber.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "albumNumber=" + albumNumber +
+                ", user=" + user +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", studyPlan=" + studyPlan +
+                ", masterThesis=" + masterThesis +
+                '}';
     }
 }
