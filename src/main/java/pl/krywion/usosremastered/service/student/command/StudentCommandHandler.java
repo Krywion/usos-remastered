@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.krywion.usosremastered.config.security.Role;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
@@ -102,7 +101,7 @@ public class StudentCommandHandler {
                 ));
         student.setStudyPlan(studyPlan);
 
-        User user = userService.createUser(dto.getEmail(), Role.STUDENT);
+        User user = userService.createUserForStudent(dto.getEmail());
         student.setUser(user);
     }
 
@@ -120,7 +119,7 @@ public class StudentCommandHandler {
             }
 
             if(!student.getUser().getEmail().equals(dto.getEmail())) {
-                User user = userService.updateUser(dto.getEmail(), Role.STUDENT);
+                User user = userService.updateUserEmail(student.getUser().getEmail(), dto.getEmail());
                 student.setUser(user);
             }
 

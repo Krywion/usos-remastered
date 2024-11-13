@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.krywion.usosremastered.config.security.Role;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.dto.domain.mapper.EmployeeMapper;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
@@ -124,7 +123,7 @@ public class EmployeeCommandHandler {
             employee.setCourses(new ArrayList<>(courses));
         }
 
-        User user = userService.createUser(dto.getEmail(), Role.EMPLOYEE);
+        User user = userService.createUserForEmployee(dto.getEmail());
         employee.setUser(user);
         employee.setHireDate(LocalDate.now());
     }
@@ -143,7 +142,7 @@ public class EmployeeCommandHandler {
         updateCourses(employee, dto.getCourseIds());
 
         if (!employee.getUser().getEmail().equals(dto.getEmail())) {
-            userService.updateUser(dto.getEmail(), Role.EMPLOYEE);
+            userService.updateUserEmail(employee.getUser().getEmail(), dto.getEmail());
         }
     }
 
