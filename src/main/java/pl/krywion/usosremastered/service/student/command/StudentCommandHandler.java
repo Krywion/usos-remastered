@@ -118,6 +118,27 @@ public class StudentCommandHandler {
         );
     }
 
+    public ServiceResponse<StudentDto> handle(RemoveFromStudyPlanCommand command) {
+        Student student = studentRepository.findById(command.albumNumber())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Student with album number %d not found", command.albumNumber())
+                ));
+
+        StudyPlan studyPlan = studyPlanRepository.findById(command.studyPlanId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Study plan with id %d not found", command.studyPlanId())
+                ));
+
+        student.getStudyPlans().remove(studyPlan);
+        Student updatedStudent = studentRepository.save(student);
+
+        return ServiceResponse.success(
+                mapper.toDto(updatedStudent),
+                "Student removed from study plan successfully",
+                HttpStatus.OK
+        );
+    }
+
     private void setupStudentRelations(Student student, StudentDto dto) {
         if (dto.getStudyPlanIds() != null && !dto.getStudyPlanIds().isEmpty()) {
             Set<StudyPlan> studyPlans = dto.getStudyPlanIds().stream()
@@ -153,5 +174,4 @@ public class StudentCommandHandler {
             throw new ValidationException("Error updating student data: " + e.getMessage());
         }
     }
-
 }

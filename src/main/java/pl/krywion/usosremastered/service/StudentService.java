@@ -24,4 +24,6 @@ public interface StudentService {
     ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName);
 
     ServiceResponse<StudentDto> assignToStudyPlan(Long albumNumber, Long studyPlanId);
+
+    ServiceResponse<StudentDto> removeFromStudyPlan(Long albumNumber, Long studyPlanId);
 }

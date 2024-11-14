@@ -63,4 +63,9 @@ public class StudentServiceImpl implements StudentService {
         return studentCommandHandler.handle(new AssignStudyPlanCommand(albumNumber, studyPlanId));
     }
 
+    @Override
+    public ServiceResponse<StudentDto> removeFromStudyPlan(Long albumNumber, Long studyPlanId) {
+        return studentCommandHandler.handle(new RemoveFromStudyPlanCommand(albumNumber, studyPlanId));
+    }
+
 }

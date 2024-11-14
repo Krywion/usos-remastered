@@ -178,4 +178,10 @@ public class StudentsController {
         ServiceResponse<StudentDto> response = studentService.assignToStudyPlan(albumNumber, studyPlanId);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
+
+    @DeleteMapping("/{albumNumber}/study-plans/{studyPlanId}")
+    public ResponseEntity<ServiceResponse<StudentDto>> removeStudyPlan(@PathVariable Long albumNumber, @PathVariable Long studyPlanId) {
+        ServiceResponse<StudentDto> response = studentService.removeFromStudyPlan(albumNumber, studyPlanId);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
 }
