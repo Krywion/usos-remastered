@@ -6,7 +6,6 @@ import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.entity.Student;
 import pl.krywion.usosremastered.exception.ResourceNotFoundException;
 import pl.krywion.usosremastered.repository.StudentRepository;
-import pl.krywion.usosremastered.repository.StudyPlanRepository;
 import pl.krywion.usosremastered.repository.UserRepository;
 import pl.krywion.usosremastered.validation.validators.EmailValidator;
 
@@ -17,7 +16,6 @@ public class StudentDtoValidator extends AbstractDtoValidator<StudentDto> {
     private final UserRepository userRepository;
     private final StudentRepository studentRepository;
     private final EmailValidator emailValidator;
-    private final StudyPlanRepository studyPlanRepository;
 
     @Override
     protected void validateDto(StudentDto dto) {
@@ -50,10 +48,6 @@ public class StudentDtoValidator extends AbstractDtoValidator<StudentDto> {
         if (checkEmailExists && userRepository.existsByEmail(dto.getEmail())) {
             addError("Email already exists");
 
-        }
-
-        if (studyPlanRepository.findById(dto.getStudyPlanId()).isEmpty()) {
-            addError(String.format("Study plan with id %d not found", dto.getStudyPlanId()));
         }
     }
 

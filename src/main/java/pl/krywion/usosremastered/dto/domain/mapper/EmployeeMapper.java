@@ -1,6 +1,5 @@
 package pl.krywion.usosremastered.dto.domain.mapper;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.entity.Course;
@@ -9,7 +8,6 @@ import pl.krywion.usosremastered.entity.Employee;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class EmployeeMapper {
 
     public EmployeeDto toDto(Employee employee) {
