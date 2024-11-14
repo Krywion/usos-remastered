@@ -172,4 +172,44 @@ public class StudentsController {
         ServiceResponse<List<StudentDto>> response = studentService.getStudentsByFirstName(firstName);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
+
+    @PutMapping("/{albumNumber}/study-plans/{studyPlanId}")
+    @Operation(
+            summary = "Assign student to study plan",
+            description = "Assigns a student to a study plan"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Student assigned to study plan successfully",
+                    content = @Content(schema = @Schema(implementation = StudentDto.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Student or study plan not found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN role")
+    })
+    public ResponseEntity<ServiceResponse<StudentDto>> assignStudyPlan(@PathVariable Long albumNumber, @PathVariable Long studyPlanId) {
+        ServiceResponse<StudentDto> response = studentService.assignToStudyPlan(albumNumber, studyPlanId);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
+
+    @DeleteMapping("/{albumNumber}/study-plans/{studyPlanId}")
+    @Operation(
+            summary = "Remove student from study plan",
+            description = "Removes a student from a study plan"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Student removed from study plan successfully",
+                    content = @Content(schema = @Schema(implementation = StudentDto.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Student or study plan not found"),
+            @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN role")
+    })
+    public ResponseEntity<ServiceResponse<StudentDto>> removeStudyPlan(@PathVariable Long albumNumber, @PathVariable Long studyPlanId) {
+        ServiceResponse<StudentDto> response = studentService.removeFromStudyPlan(albumNumber, studyPlanId);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
 }

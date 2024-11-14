@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.krywion.usosremastered.audit.AuditableEntity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name="students")
@@ -26,9 +29,13 @@ public class Student extends AuditableEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @ManyToOne
-    @JoinColumn(name="study_plan_id")
-    private StudyPlan studyPlan;
+    @ManyToMany
+    @JoinTable(
+            name = "students_study_plans",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "study_plan_id")
+    )
+    private Set<StudyPlan> studyPlans = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name="master_thesis_id")
@@ -54,7 +61,7 @@ public class Student extends AuditableEntity {
                 ", user=" + user +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", studyPlan=" + studyPlan +
+                ", studyPlan=" + studyPlans +
                 ", masterThesis=" + masterThesis +
                 '}';
     }
