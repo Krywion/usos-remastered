@@ -29,7 +29,7 @@ public class StudentDto implements Identifiable {
     private String email;
 
     @Schema(description = "ID of student's study plan", example = "1")
-    private Long studyPlanId;
+    private List<Long> studyPlanIds;
 
     @Schema(description = "List of student's master thesis IDs")
     private List<Long> masterThesisIds;

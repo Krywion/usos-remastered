@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.service.StudentService;
-import pl.krywion.usosremastered.service.student.command.CreateStudentCommand;
-import pl.krywion.usosremastered.service.student.command.DeleteStudentCommand;
-import pl.krywion.usosremastered.service.student.command.StudentCommandHandler;
-import pl.krywion.usosremastered.service.student.command.UpdateStudentCommand;
+import pl.krywion.usosremastered.service.student.command.*;
 import pl.krywion.usosremastered.service.student.query.StudentQueryService;
 
 
@@ -59,6 +56,11 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ServiceResponse<List<StudentDto>> getStudentsByFirstName(String firstName) {
         return studentQueryService.findByFirstName(firstName);
+    }
+
+    @Override
+    public ServiceResponse<StudentDto> assignToStudyPlan(Long albumNumber, Long studyPlanId) {
+        return studentCommandHandler.handle(new AssignStudyPlanCommand(albumNumber, studyPlanId));
     }
 
 }

@@ -172,4 +172,10 @@ public class StudentsController {
         ServiceResponse<List<StudentDto>> response = studentService.getStudentsByFirstName(firstName);
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
+
+    @PutMapping("/{albumNumber}/study-plans/{studyPlanId}")
+    public ResponseEntity<ServiceResponse<StudentDto>> assignStudyPlan(@PathVariable Long albumNumber, @PathVariable Long studyPlanId) {
+        ServiceResponse<StudentDto> response = studentService.assignToStudyPlan(albumNumber, studyPlanId);
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
+    }
 }

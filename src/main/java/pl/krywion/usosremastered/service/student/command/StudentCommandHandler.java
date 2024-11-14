@@ -19,6 +19,9 @@ import pl.krywion.usosremastered.repository.StudyPlanRepository;
 import pl.krywion.usosremastered.service.UserService;
 import pl.krywion.usosremastered.validation.dto.StudentDtoValidator;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -94,12 +97,35 @@ public class StudentCommandHandler {
         );
     }
 
-    private void setupStudentRelations(Student student, StudentDto dto) {
-        StudyPlan studyPlan = studyPlanRepository.findById(dto.getStudyPlanId())
+    public ServiceResponse<StudentDto> handle(AssignStudyPlanCommand command) {
+        Student student = studentRepository.findById(command.albumNumber())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Study plan with ID %d not found", dto.getStudyPlanId())
+                        String.format("Student with album number %d not found", command.albumNumber())
                 ));
-        student.setStudyPlan(studyPlan);
+
+        StudyPlan studyPlan = studyPlanRepository.findById(command.studyPlanId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Study plan with id %d not found", command.studyPlanId())
+                ));
+
+        student.getStudyPlans().add(studyPlan);
+        Student updatedStudent = studentRepository.save(student);
+
+        return ServiceResponse.success(
+                mapper.toDto(updatedStudent),
+                "Study plan assigned successfully",
+                HttpStatus.OK
+        );
+    }
+
+    private void setupStudentRelations(Student student, StudentDto dto) {
+        if (dto.getStudyPlanIds() != null && !dto.getStudyPlanIds().isEmpty()) {
+            Set<StudyPlan> studyPlans = dto.getStudyPlanIds().stream()
+                    .map(id -> studyPlanRepository.findById(id)
+                            .orElseThrow(() -> new ResourceNotFoundException("Study plan not found: " + id)))
+                    .collect(Collectors.toSet());
+            student.setStudyPlans(studyPlans);
+        }
 
         User user = userService.createUserForStudent(dto.getEmail());
         student.setUser(user);
@@ -110,24 +136,22 @@ public class StudentCommandHandler {
             student.setFirstName(dto.getFirstName());
             student.setLastName(dto.getLastName());
 
-            if(!student.getStudyPlan().getId().equals(dto.getStudyPlanId())) {
-                StudyPlan studyPlan = studyPlanRepository.findById(dto.getStudyPlanId())
-                        .orElseThrow(() -> new ResourceNotFoundException(
-                                String.format("Study plan with ID %d not found", dto.getStudyPlanId())
-                        ));
-                student.setStudyPlan(studyPlan);
+            if (dto.getStudyPlanIds() != null) {
+                Set<StudyPlan> newStudyPlans = dto.getStudyPlanIds().stream()
+                        .map(id -> studyPlanRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Study plan not found: " + id)))
+                        .collect(Collectors.toSet());
+                student.setStudyPlans(newStudyPlans);
             }
 
-            if(!student.getUser().getEmail().equals(dto.getEmail())) {
+            if (!student.getUser().getEmail().equals(dto.getEmail())) {
                 User user = userService.updateUserEmail(student.getUser().getEmail(), dto.getEmail());
                 student.setUser(user);
             }
-
         } catch (Exception e) {
             log.error("Error updating student data", e);
             throw new ValidationException("Error updating student data: " + e.getMessage());
         }
-
     }
 
 }
