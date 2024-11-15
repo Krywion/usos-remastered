@@ -15,8 +15,8 @@ University management system with focus on security, scalability and comprehensi
 
 ## Completed Features
 ✅ Role-based access control  
-✅ Organizational structure management
-✅ Employee and Student Management
+✅ Organizational structure management   
+✅ Employee and Student Management   
 ✅ Change auditing  
 ✅ Email notifications  
 ✅ Study plans base functionality
