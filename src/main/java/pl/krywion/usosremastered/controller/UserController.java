@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.krywion.usosremastered.dto.domain.UserDto;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
@@ -53,6 +54,19 @@ public class UserController {
         return ResponseEntity.ok(
                 ServiceResponse.success(userDtos,
                         "Users found successfully",
+                        HttpStatus.OK)
+        );
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/reset")
+    public ResponseEntity<ServiceResponse<UserDto>> resetPassword(@RequestParam String email) {
+        User user = userService.resetPassword(email);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+
+        return ResponseEntity.ok(
+                ServiceResponse.success(userDto,
+                        "Password reset successfully",
                         HttpStatus.OK)
         );
     }

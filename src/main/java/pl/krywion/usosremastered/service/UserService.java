@@ -13,5 +13,5 @@ public interface UserService {
     User updateUserEmail(String oldEmail, String newEmail);
     User findByEmail(String email);
     List<User> getAllUsers();
-
+    User resetPassword(String email);
 }

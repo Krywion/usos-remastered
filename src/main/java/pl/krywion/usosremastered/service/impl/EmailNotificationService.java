@@ -30,6 +30,16 @@ public class EmailNotificationService implements NotificationService {
         sendEmail(email, "Account Deleted", "Your account in University System has been deleted");
     }
 
+    @Override
+    public void sendPasswordResetMessage(String email, String password) {
+        String message = String.format("""
+            Your password has been reset
+            New password: %s
+            You can now log in to the system.""",
+                password);
+        sendEmail(email, "Password Reset", message);
+    }
+
     private String buildWelcomeMessage(String email, String password) {
         return String.format("""
             Hello, Welcome to our University

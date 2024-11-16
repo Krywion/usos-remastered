@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import pl.krywion.usosremastered.audit.Identifiable;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Schema(description = "Student Data Transfer Object")
-public class StudentDto implements Identifiable {
+public class StudentDto {
 
     @Schema(description = "Student's album number - unique identifier", example = "123456")
     private Long albumNumber;
@@ -35,8 +34,4 @@ public class StudentDto implements Identifiable {
     private List<Long> masterThesisIds;
 
 
-    @Override
-    public String getIdentifier() {
-        return albumNumber.toString();
-    }
 }
