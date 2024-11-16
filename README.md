@@ -25,6 +25,7 @@ University management system with focus on security, scalability and comprehensi
 🚧 Thesis tracking  
 🚧 Grade management  
 🚧 Advanced reporting
+🚧 Signing up for courses 
 
 ## Setup
 1. Clone repository
