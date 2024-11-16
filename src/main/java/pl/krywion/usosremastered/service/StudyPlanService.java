@@ -1,14 +1,14 @@
 package pl.krywion.usosremastered.service;
 
 import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
-import pl.krywion.usosremastered.dto.response.ServiceResponse;
+import pl.krywion.usosremastered.entity.StudyPlan;
 
 import java.util.List;
 
 public interface StudyPlanService {
-    ServiceResponse<StudyPlanDto> createStudyPlan(StudyPlanDto studyPlanDto);
+    StudyPlan createStudyPlan(StudyPlanDto studyPlanDto);
 
-    ServiceResponse<StudyPlanDto> getStudyPlan(Long id);
+    StudyPlan getStudyPlan(Long id);
 
-    ServiceResponse<List<StudyPlanDto>> allStudyPlans();
+    List<StudyPlan> allStudyPlans();
 }

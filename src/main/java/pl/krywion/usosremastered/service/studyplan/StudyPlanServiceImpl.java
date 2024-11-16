@@ -3,7 +3,7 @@ package pl.krywion.usosremastered.service.studyplan;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
-import pl.krywion.usosremastered.dto.response.ServiceResponse;
+import pl.krywion.usosremastered.entity.StudyPlan;
 import pl.krywion.usosremastered.service.StudyPlanService;
 import pl.krywion.usosremastered.service.studyplan.command.CreateStudyPlanCommand;
 import pl.krywion.usosremastered.service.studyplan.command.StudyPlanCommandHandler;
@@ -19,17 +19,17 @@ public class StudyPlanServiceImpl implements StudyPlanService {
     private final StudyPlanQueryService studyPlanQueryService;
 
     @Override
-    public ServiceResponse<StudyPlanDto> createStudyPlan(StudyPlanDto studyPlanDto) {
+    public StudyPlan createStudyPlan(StudyPlanDto studyPlanDto) {
         return studyPlanCommandHandler.handle(new CreateStudyPlanCommand(studyPlanDto));
     }
 
     @Override
-    public ServiceResponse<StudyPlanDto> getStudyPlan(Long id) {
+    public StudyPlan getStudyPlan(Long id) {
         return studyPlanQueryService.findById(id);
     }
 
     @Override
-    public ServiceResponse<List<StudyPlanDto>> allStudyPlans() {
+    public List<StudyPlan> allStudyPlans() {
         return studyPlanQueryService.findAll();
     }
 }

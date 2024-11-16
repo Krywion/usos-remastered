@@ -7,6 +7,8 @@ import pl.krywion.usosremastered.entity.User;
 import pl.krywion.usosremastered.exception.ResourceNotFoundException;
 import pl.krywion.usosremastered.exception.ValidationException;
 import pl.krywion.usosremastered.repository.UserRepository;
+import pl.krywion.usosremastered.service.NotificationService;
+import pl.krywion.usosremastered.service.PasswordManagementService;
 import pl.krywion.usosremastered.service.user.api.UserManager;
 
 @RequiredArgsConstructor
@@ -14,6 +16,8 @@ import pl.krywion.usosremastered.service.user.api.UserManager;
 @Service
 public class UserManagerImpl implements UserManager {
     private final UserRepository userRepository;
+    private final PasswordManagementService passwordManagementService;
+    private final NotificationService notificationService;
 
     @Override
     public void deleteUser(String email) {
@@ -31,6 +35,16 @@ public class UserManagerImpl implements UserManager {
         }
         user.setEmail(newEmail);
 
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User resetPassword(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User not found with email: " + email));
+        String password = passwordManagementService.generateSecurePassword();
+        notificationService.sendPasswordResetMessage(user.getEmail(), password);
+        user.setPassword(passwordManagementService.encodePassword(password));
         return userRepository.save(user);
     }
 }

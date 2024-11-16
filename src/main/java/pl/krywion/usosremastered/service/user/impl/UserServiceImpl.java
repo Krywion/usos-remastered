@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
         return userQuery.getAllUsers();
     }
+
+    @Override
+    public User resetPassword(String email) {
+        return userManager.resetPassword(email);
+    }
 }

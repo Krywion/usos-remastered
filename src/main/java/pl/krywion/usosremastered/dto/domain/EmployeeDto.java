@@ -2,16 +2,13 @@ package pl.krywion.usosremastered.dto.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import pl.krywion.usosremastered.audit.Identifiable;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @Schema(description = "Employee Data Transfer Object")
-public class EmployeeDto implements Identifiable {
-
-
+public class EmployeeDto {
     @Schema(description = "Employee's PESEL number", example = "54042132492")
     private String pesel;
 
@@ -35,9 +32,4 @@ public class EmployeeDto implements Identifiable {
 
     @Schema(description = "Employee's hire date", example = "2021-01-01")
     private LocalDate hireDate;
-
-    @Override
-    public String getIdentifier() {
-        return pesel;
-    }
 }
