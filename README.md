@@ -24,7 +24,7 @@ University management system with focus on security, scalability and comprehensi
 ## In Development 
 🚧 Thesis tracking  
 🚧 Grade management  
-🚧 Advanced reporting
+🚧 Advanced reporting   
 🚧 Signing up for courses 
 
 ## Setup
