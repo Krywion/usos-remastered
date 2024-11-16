@@ -1,5 +1,8 @@
 package pl.krywion.usosremastered.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,15 @@ public class UserController {
 
 
     @GetMapping("/me")
+    @Operation(
+            summary = "Get authenticated user",
+            description = "Get the currently authenticated user"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+
     public ResponseEntity<ServiceResponse<UserDto>> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -45,6 +57,16 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
+    @Operation(
+            summary = "Get all users",
+            description = "Get all users in the system"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users found successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN role")
+    })
+
     public ResponseEntity<ServiceResponse<List<UserDto>>> allUsers() {
         List<User> users = userService.getAllUsers();
         List<UserDto> userDtos = users.stream()
@@ -60,6 +82,15 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/reset")
+    @Operation(
+            summary = "Reset user password",
+            description = "Reset user password by email"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password reset successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden - requires ADMIN role")
+    })
     public ResponseEntity<ServiceResponse<UserDto>> resetPassword(@RequestParam String email) {
         User user = userService.resetPassword(email);
         UserDto userDto = modelMapper.map(user, UserDto.class);
