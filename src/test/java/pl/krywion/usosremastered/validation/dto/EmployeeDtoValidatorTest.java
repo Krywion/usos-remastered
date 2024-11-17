@@ -1,11 +1,10 @@
 package pl.krywion.usosremastered.validation.dto;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.krywion.usosremastered.BaseTest;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
@@ -31,23 +30,27 @@ import static org.mockito.Mockito.*;
 @DisplayName("Employee DTO Validator Tests")
 class EmployeeDtoValidatorTest extends BaseTest {
 
-    @Mock
     private UserRepository userRepository;
 
-    @Mock
     private DepartmentRepository departmentRepository;
 
-    @Mock
     private EmployeeRepository employeeRepository;
 
-    @Mock
     private EmailValidator emailValidator;
 
-    @Mock
     private PeselValidator peselValidator;
 
-    @InjectMocks
     private EmployeeDtoValidator validator;
+
+    @BeforeEach
+    void setUp() {
+        userRepository = mock(UserRepository.class);
+        departmentRepository = mock(DepartmentRepository.class);
+        employeeRepository = mock(EmployeeRepository.class);
+        emailValidator = mock(EmailValidator.class);
+        peselValidator = mock(PeselValidator.class);
+        validator = new EmployeeDtoValidator(emailValidator, peselValidator, userRepository, departmentRepository, null, employeeRepository);
+    }
 
     @Nested
     @DisplayName("Create validation tests")

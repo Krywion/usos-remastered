@@ -1,10 +1,9 @@
 package pl.krywion.usosremastered.validation.dto;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.krywion.usosremastered.BaseTest;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
@@ -19,29 +18,35 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Student Dto Validator Tests")
 class StudentDtoValidatorTest extends BaseTest {
 
-    @Mock
     private StudentRepository studentRepository;
 
-    @Mock
     private EmailValidator emailValidator;
 
-    @Mock
     private UserRepository userRepository;
 
-    @InjectMocks
     private StudentDtoValidator studentDtoValidator;
+
+    @BeforeEach
+    void setUp() {
+        studentRepository = mock(StudentRepository.class);
+        emailValidator = mock(EmailValidator.class);
+        userRepository = mock(UserRepository.class);
+        studentDtoValidator = new StudentDtoValidator(userRepository, studentRepository, emailValidator);
+    }
 
     @Test
     @DisplayName("Should validate correct student DTO")
     void shouldValidateCorrectStudentDto() {
         // given
         StudentDto studentDto = createValidStudentDto();
+
         when(emailValidator.isInvalid(anyString())).thenReturn(false);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
 
@@ -139,6 +144,7 @@ class StudentDtoValidatorTest extends BaseTest {
     void shouldThrowException_WhenEmailIsInvalid() {
         // given
         StudentDto studentDto = createValidStudentDto();
+        studentDto.setEmail("invalid-email");
         when(emailValidator.isInvalid(anyString())).thenReturn(true);
         when(emailValidator.getErrorMessage()).thenReturn("Invalid email format");
 
@@ -174,7 +180,7 @@ class StudentDtoValidatorTest extends BaseTest {
     @DisplayName("Should validate update when email is not changed")
     void shouldValidateUpdate_WhenEmailIsNotChanged() {
         // given
-        Long albumNumber = 1L;
+        Long albumNumber = TEST_ALBUM_NUMBER;
         StudentDto dto = createValidStudentDto();
         Student existingStudent = createExistingStudent();
 
