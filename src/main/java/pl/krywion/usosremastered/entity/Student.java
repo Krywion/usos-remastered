@@ -42,7 +42,9 @@ public class Student extends AuditableEntity {
     private MasterThesis masterThesis;
 
     public Student() {
-
+        // empty constructor for:
+        // - tests
+        // - mappers
     }
 
     public String getEmail() {
