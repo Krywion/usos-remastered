@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
@@ -18,6 +19,7 @@ import pl.krywion.usosremastered.service.StudentService;
 
 import java.util.List;
 
+@Transactional
 @RestController
 @RequestMapping("/api/students")
 @PreAuthorize("hasRole('ADMIN')")
