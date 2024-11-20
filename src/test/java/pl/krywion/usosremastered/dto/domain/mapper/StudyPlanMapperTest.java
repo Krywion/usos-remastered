@@ -1,5 +1,6 @@
 package pl.krywion.usosremastered.dto.domain.mapper;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.krywion.usosremastered.dto.domain.StudyPlanDto;
 import pl.krywion.usosremastered.entity.StudyPlan;
@@ -8,9 +9,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Study Plan Mapper Tests")
 class StudyPlanMapperTest {
     private final StudyPlanMapper mapper = new StudyPlanMapper();
 
+    @DisplayName("Should map StudyPlan to StudyPlanDto")
     @Test
     void testToDto() {
         StudyPlan entity = createStudyPlan(1L, "Test Plan");
@@ -18,6 +21,7 @@ class StudyPlanMapperTest {
         assertStudyPlanDto(dto, entity);
     }
 
+    @DisplayName("Should map StudyPlanDto to StudyPlan")
     @Test
     void testToEntity() {
         StudyPlanDto dto = createStudyPlanDto();
@@ -25,6 +29,7 @@ class StudyPlanMapperTest {
         assertStudyPlanEntity(entity, dto);
     }
 
+    @DisplayName("Should map list of StudyPlans to list of StudyPlanDtos")
     @Test
     void testToDtoList() {
         List<StudyPlan> entities = List.of(
