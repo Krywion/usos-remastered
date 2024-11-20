@@ -37,9 +37,6 @@ public class Employee extends AuditableEntity {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    @OneToMany(mappedBy = "promoter")
-    private List<MasterThesis> masterTheses;
-
     @ManyToMany
     @JoinTable(
             name = "employee_courses",
