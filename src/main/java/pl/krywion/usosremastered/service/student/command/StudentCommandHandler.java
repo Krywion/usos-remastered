@@ -50,15 +50,15 @@ public class StudentCommandHandler {
 
     public Student handle(UpdateStudentCommand command) {
         try {
-        validator.validateForUpdate(command.studentDto(), command.albumNumber());
+            Student student = studentRepository.findById(command.albumNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            String.format("Student with album number %d not found", command.albumNumber())
+                    ));
 
-        Student student = studentRepository.findById(command.albumNumber())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Student with album number %d not found", command.albumNumber())
-                ));
+            validator.validateForUpdate(command.studentDto(), command.albumNumber());
 
-        updateStudentData(student, command.studentDto());
-        return studentRepository.save(student);
+            updateStudentData(student, command.studentDto());
+            return studentRepository.save(student);
         } catch (EntityValidationException e) {
             throw e;
         } catch (Exception e) {
