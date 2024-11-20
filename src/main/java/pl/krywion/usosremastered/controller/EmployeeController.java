@@ -8,16 +8,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
+import pl.krywion.usosremastered.dto.domain.mapper.EmployeeMapper;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.service.EmployeeService;
 
 import java.util.List;
 
-
+@Transactional
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/api/employee")
@@ -25,9 +28,11 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+    private final EmployeeMapper employeeMapper;
 
-    public EmployeeController(EmployeeService employeeService) {
+    public EmployeeController(EmployeeService employeeService, EmployeeMapper employeeMapper) {
         this.employeeService = employeeService;
+        this.employeeMapper = employeeMapper;
     }
 
     @Operation(
@@ -45,7 +50,11 @@ public class EmployeeController {
     })
     @PostMapping
     public ResponseEntity<ServiceResponse<EmployeeDto>> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
-        ServiceResponse<EmployeeDto> response = employeeService.createEmployee(employeeDto);
+        ServiceResponse<EmployeeDto> response = ServiceResponse.success(
+                employeeMapper.toDto(employeeService.createEmployee(employeeDto)),
+                "Employee created successfully",
+                HttpStatus.CREATED
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -63,7 +72,11 @@ public class EmployeeController {
     })
     @GetMapping
     public ResponseEntity<ServiceResponse<List<EmployeeDto>>> getAllEmployees() {
-        ServiceResponse<List<EmployeeDto>> response = employeeService.getAllEmployees();
+        ServiceResponse<List<EmployeeDto>> response = ServiceResponse.success(
+                employeeMapper.toDtoList(employeeService.getAllEmployees()),
+                "Employees retrieved successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -83,7 +96,11 @@ public class EmployeeController {
     })
     @PutMapping("/{pesel}")
     public ResponseEntity<ServiceResponse<EmployeeDto>> updateEmployee(@PathVariable String pesel, @Valid @RequestBody EmployeeDto employeeDto) {
-        ServiceResponse<EmployeeDto> response = employeeService.updateEmployee(pesel, employeeDto);
+        ServiceResponse<EmployeeDto> response = ServiceResponse.success(
+                employeeMapper.toDto(employeeService.updateEmployee(pesel, employeeDto)),
+                "Employee updated successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -102,7 +119,11 @@ public class EmployeeController {
     })
     @DeleteMapping("/{pesel}")
     public ResponseEntity<ServiceResponse<EmployeeDto>> deleteEmployee(@PathVariable String pesel) {
-        ServiceResponse<EmployeeDto> response = employeeService.deleteEmployee(pesel);
+        ServiceResponse<EmployeeDto> response = ServiceResponse.success(
+                employeeMapper.toDto(employeeService.deleteEmployee(pesel)),
+                "Employee deleted successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -121,7 +142,11 @@ public class EmployeeController {
     })
     @GetMapping("/{pesel}")
     public ResponseEntity<ServiceResponse<EmployeeDto>> getEmployeeByPesel(@PathVariable String pesel) {
-        ServiceResponse<EmployeeDto> response = employeeService.getEmployeeByPesel(pesel);
+        ServiceResponse<EmployeeDto> response = ServiceResponse.success(
+                employeeMapper.toDto(employeeService.getEmployeeByPesel(pesel)),
+                "Employee retrieved successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -139,7 +164,11 @@ public class EmployeeController {
     })
     @GetMapping("/by-firstname")
     public ResponseEntity<ServiceResponse<List<EmployeeDto>>> getEmployeeByFirstName(@RequestParam String firstName) {
-        ServiceResponse<List<EmployeeDto>> response = employeeService.getEmployeeByFirstName(firstName);
+        ServiceResponse<List<EmployeeDto>> response = ServiceResponse.success(
+                employeeMapper.toDtoList(employeeService.getEmployeeByFirstName(firstName)),
+                "Employees retrieved successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -157,7 +186,11 @@ public class EmployeeController {
     })
     @GetMapping("/by-lastname")
     public ResponseEntity<ServiceResponse<List<EmployeeDto>>> getEmployeesByLastName(@RequestParam String lastName) {
-        ServiceResponse<List<EmployeeDto>> response = employeeService.getEmployeesByLastName(lastName);
+        ServiceResponse<List<EmployeeDto>> response = ServiceResponse.success(
+                employeeMapper.toDtoList(employeeService.getEmployeesByLastName(lastName)),
+                "Employees retrieved successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
@@ -176,7 +209,11 @@ public class EmployeeController {
     })
     @GetMapping("/by-email")
     public ResponseEntity<ServiceResponse<EmployeeDto>> getEmployeeByEmail(@RequestParam String email) {
-        ServiceResponse<EmployeeDto> response = employeeService.getEmployeeByEmail(email);
+        ServiceResponse<EmployeeDto> response = ServiceResponse.success(
+                employeeMapper.toDto(employeeService.getEmployeeByEmail(email)),
+                "Employee retrieved successfully",
+                HttpStatus.OK
+        );
         return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
