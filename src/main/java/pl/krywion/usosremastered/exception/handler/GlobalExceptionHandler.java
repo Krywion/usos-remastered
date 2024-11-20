@@ -85,7 +85,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ServiceResponse<?>> handleUnexpectedException(Exception ex) {
         ServiceResponse<?> response = ServiceResponse.error(
-            "An unexpected error occurred" + ex.getMessage(),
+            "An unexpected error occurred: " + ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
