@@ -3,7 +3,9 @@ package pl.krywion.usosremastered.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
 import pl.krywion.usosremastered.entity.Student;
@@ -27,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @DisplayName("Student Service Tests")
+@ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
     @Mock
