@@ -1,11 +1,13 @@
 package pl.krywion.usosremastered.exception.handler;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.krywion.usosremastered.dto.response.ServiceResponse;
@@ -24,32 +26,38 @@ public class GlobalExceptionHandler {
             BadCredentialsException.class,
             ExpiredJwtException.class,
             SignatureException.class,
-            AuthorizationDeniedException.class
+            MalformedJwtException.class,
+            AuthenticationException.class
     })
-    public ResponseEntity<ServiceResponse<?>> handleAuthenticationException(Exception ex) {
+    public ResponseEntity<ServiceResponse<Void>> handleAuthenticationException(Exception ex) {
         String message;
-        HttpStatus status;
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
 
         if (ex instanceof BadCredentialsException) {
             message = "Invalid username or password";
-            status = HttpStatus.UNAUTHORIZED;
         } else if (ex instanceof ExpiredJwtException) {
             message = "Token has expired";
-            status = HttpStatus.UNAUTHORIZED;
         } else if (ex instanceof SignatureException) {
             message = "Invalid token signature";
-            status = HttpStatus.UNAUTHORIZED;
+        } else if (ex instanceof MalformedJwtException) {
+            message = "Malformed JWT token";
         } else {
-            message = "Access denied";
-            status = HttpStatus.FORBIDDEN;
+            message = "Authentication failed";
         }
 
-        return new ResponseEntity<>(ServiceResponse.error(message, status), status);
+        return ResponseEntity.status(status)
+                .body(ServiceResponse.error(message, status));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ServiceResponse<Void>> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ServiceResponse.error("Access denied", HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ServiceResponse<?>> handleValidationException(ValidationException ex) {
-        ServiceResponse<?> response;
+    public ResponseEntity<ServiceResponse<Void>> handleValidationException(ValidationException ex) {
+        ServiceResponse<Void> response;
 
         if (ex instanceof EntityValidationException eve) {
             Map<String, Object> details = new HashMap<>();
@@ -74,8 +82,8 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ServiceResponse<?>> handleBaseException(BaseException ex) {
-        ServiceResponse<?> response = ServiceResponse.error(
+    public ResponseEntity<ServiceResponse<Void>> handleBaseException(BaseException ex) {
+        ServiceResponse<Void> response = ServiceResponse.error(
                 ex.getMessage(),
                 ex.getHttpStatus()
         );
@@ -83,8 +91,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ServiceResponse<?>> handleUnexpectedException(Exception ex) {
-        ServiceResponse<?> response = ServiceResponse.error(
+    public ResponseEntity<ServiceResponse<Void>> handleUnexpectedException(Exception ex) {
+        ServiceResponse<Void> response = ServiceResponse.error(
             "An unexpected error occurred: " + ex.getMessage(),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
