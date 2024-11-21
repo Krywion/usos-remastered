@@ -2,6 +2,7 @@ package pl.krywion.usosremastered.exception.handler;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,11 +23,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+@DisplayName("Global Exception Handler Tests")
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
 
     private final GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
 
+    @DisplayName("Should handle bad credentials exception")
     @Test
     void shouldHandleBadCredentialsException() {
         // given
@@ -42,6 +45,7 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().isSuccess()).isFalse();
     }
 
+    @DisplayName("Should handle expired jwt exception")
     @Test
     void shouldHandleExpiredJwtException() {
         // given
@@ -57,6 +61,7 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().isSuccess()).isFalse();
     }
 
+    @DisplayName("Should handle signature exception")
     @Test
     void shouldHandleSignatureException() {
         // given
@@ -74,6 +79,7 @@ class GlobalExceptionHandlerTest {
     }
 
 
+    @DisplayName("Should handle access denied exception")
     @Test
     void shouldHandleAccessDeniedException() {
         // given
@@ -89,6 +95,7 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().isSuccess()).isFalse();
     }
 
+    @DisplayName("Should handle validation exception")
     @Test
     void shouldHandleValidationException() {
         // given
@@ -104,6 +111,7 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().isSuccess()).isFalse();
     }
 
+    @DisplayName("Should handle entity validation exception")
     @Test
     void shouldHandleEntityValidationException() {
         // given
@@ -123,6 +131,7 @@ class GlobalExceptionHandlerTest {
                 .containsEntry("validationErrors", errors);
     }
 
+    @DisplayName("Should handle base exception")
     @Test
     void shouldHandleBaseException() {
         // given
@@ -138,6 +147,7 @@ class GlobalExceptionHandlerTest {
         assertThat(response.getBody().isSuccess()).isFalse();
     }
 
+    @DisplayName("Should handle unexpected exception")
     @Test
     void shouldHandleUnexpectedException() {
         // given
