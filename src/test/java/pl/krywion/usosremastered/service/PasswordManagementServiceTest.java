@@ -1,6 +1,7 @@
 package pl.krywion.usosremastered.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -13,6 +14,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Password Management Service Tests")
 class PasswordManagementServiceTest {
 
     @Mock
@@ -26,6 +28,7 @@ class PasswordManagementServiceTest {
     }
 
     @Test
+    @DisplayName("Should generate secure password")
     void shouldGenerateSecurePassword() {
         // when
         String password = passwordManagementService.generateSecurePassword();
@@ -40,6 +43,7 @@ class PasswordManagementServiceTest {
     }
 
     @Test
+    @DisplayName("Should generate unique passwords")
     void shouldGenerateUniquePasswords() {
         // when
         String password1 = passwordManagementService.generateSecurePassword();
@@ -50,6 +54,7 @@ class PasswordManagementServiceTest {
     }
 
     @Test
+    @DisplayName("Should encode password")
     void shouldEncodePassword() {
         // given
         String rawPassword = "password123";
@@ -64,6 +69,7 @@ class PasswordManagementServiceTest {
     }
 
     @Test
+    @DisplayName("Should generate password with required length")
     void shouldGeneratePasswordWithRequiredLength() {
         // when
         String password = passwordManagementService.generateSecurePassword();
@@ -73,6 +79,7 @@ class PasswordManagementServiceTest {
     }
 
     @Test
+    @DisplayName("Should generate password with all required character types")
     void shouldGeneratePasswordWithAllRequiredCharacterTypes() {
         // when
         String password = passwordManagementService.generateSecurePassword();
