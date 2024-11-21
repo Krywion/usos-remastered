@@ -33,7 +33,7 @@ class GlobalExceptionHandlerTest {
         BadCredentialsException exception = new BadCredentialsException("Invalid username or password");
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleAuthenticationException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleAuthenticationException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -48,7 +48,7 @@ class GlobalExceptionHandlerTest {
         ExpiredJwtException exception = mock(ExpiredJwtException.class);
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleAuthenticationException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleAuthenticationException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -63,7 +63,7 @@ class GlobalExceptionHandlerTest {
         SignatureException exception = new SignatureException("test");
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleAuthenticationException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleAuthenticationException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
@@ -80,7 +80,7 @@ class GlobalExceptionHandlerTest {
         AccessDeniedException exception = new AccessDeniedException("Access denied");
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleAccessDeniedException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleAccessDeniedException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
@@ -95,7 +95,7 @@ class GlobalExceptionHandlerTest {
         ValidationException exception = new ValidationException("Validation failed");
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleValidationException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleValidationException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -111,7 +111,7 @@ class GlobalExceptionHandlerTest {
         EntityValidationException exception = new EntityValidationException(Student.class, errors);
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleValidationException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleValidationException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -129,7 +129,7 @@ class GlobalExceptionHandlerTest {
         BaseException exception = new ResourceNotFoundException("Resource not found");
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleBaseException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleBaseException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -144,7 +144,7 @@ class GlobalExceptionHandlerTest {
         RuntimeException exception = new RuntimeException("Unexpected error");
 
         // when
-        ResponseEntity<ServiceResponse<?>> response = exceptionHandler.handleUnexpectedException(exception);
+        ResponseEntity<ServiceResponse<Void>> response = exceptionHandler.handleUnexpectedException(exception);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
