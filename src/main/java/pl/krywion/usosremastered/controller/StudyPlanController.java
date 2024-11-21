@@ -26,20 +26,20 @@ public class StudyPlanController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudyPlanDto> getStudyPlan(@PathVariable Long id) {
+    public ResponseEntity<ServiceResponse<StudyPlanDto>> getStudyPlan(@PathVariable Long id) {
         ServiceResponse<StudyPlanDto> response = ServiceResponse.success(
                 mapper.toDto(studyPlanService.getStudyPlan(id)),
                 "Study plan retrieved successfully",
                 HttpStatus.OK);
-        return ResponseEntity.status(response.getHttpStatus()).body(response.getData());
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<StudyPlanDto>> allStudyPlans() {
+    public ResponseEntity<ServiceResponse<List<StudyPlanDto>>> allStudyPlans() {
         ServiceResponse<List<StudyPlanDto>> response = ServiceResponse.success(
                 mapper.toDtoList(studyPlanService.allStudyPlans()),
                 "All study plans retrieved successfully",
                 HttpStatus.OK);
-        return ResponseEntity.status(response.getHttpStatus()).body(response.getData());
+        return ResponseEntity.status(response.getHttpStatus()).body(response);
     }
 }
