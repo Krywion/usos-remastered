@@ -1,8 +1,10 @@
 package pl.krywion.usosremastered.dto.domain;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Setter
+@Getter
 public class InstituteDto {
     private Long id;
     private String name;
