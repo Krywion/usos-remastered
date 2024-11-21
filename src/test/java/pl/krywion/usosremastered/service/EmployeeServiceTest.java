@@ -1,6 +1,7 @@
 package pl.krywion.usosremastered.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@DisplayName("Employee Service Tests")
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
 
@@ -55,6 +57,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should create employee")
     void shouldCreateEmployee() {
         // given
         EmployeeDto dto = createEmployeeDto();
@@ -80,6 +83,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should get all employees")
     void shouldGetAllEmployees() {
         // given
         List<Employee> employees = Arrays.asList(createEmployee(), createEmployee());
@@ -94,6 +98,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should update employee by PESEL")
     void shouldUpdateEmployee() {
         // given
         String pesel = "12345678901";
@@ -116,6 +121,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should delete employee by PESEL")
     void shouldDeleteEmployee() {
         // given
         String pesel = "12345678901";
@@ -135,6 +141,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should delete employee by PESEL")
     void shouldThrowExceptionWhenEmployeeNotFound() {
         // given
         String pesel = "12345678901";
@@ -146,6 +153,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should get employee by LastName")
     void shouldGetEmployeesByLastName() {
         // given
         List<Employee> employees = Collections.singletonList(createEmployee());
@@ -160,6 +168,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should get employee by FirstName")
     void shouldGetEmployeeByFirstName() {
         // given
         List<Employee> employees = Collections.singletonList(createEmployee());
@@ -174,6 +183,7 @@ class EmployeeServiceTest {
     }
 
     @Test
+    @DisplayName("Should get employee by email")
     void shouldGetEmployeeByEmail() {
         // given
         Employee employee = createEmployee();
