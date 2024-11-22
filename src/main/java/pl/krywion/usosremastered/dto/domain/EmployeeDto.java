@@ -1,12 +1,14 @@
 package pl.krywion.usosremastered.dto.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Schema(description = "Employee Data Transfer Object")
 public class EmployeeDto {
     @Schema(description = "Employee's PESEL number", example = "54042132492")

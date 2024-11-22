@@ -41,6 +41,10 @@ public class StudentDtoValidator extends AbstractDtoValidator<StudentDto> {
             addError("Last name is required");
         }
 
+        if(dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            addError("Email is required");
+        }
+
         if (emailValidator.isInvalid(dto.getEmail())) {
             addError(emailValidator.getErrorMessage());
         }

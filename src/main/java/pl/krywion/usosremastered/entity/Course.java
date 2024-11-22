@@ -2,12 +2,14 @@ package pl.krywion.usosremastered.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 import pl.krywion.usosremastered.audit.AuditableEntity;
 
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name="courses")
 public class Course extends AuditableEntity {
 

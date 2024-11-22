@@ -1,12 +1,14 @@
 package pl.krywion.usosremastered.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
-@Data
+@Getter
+@Setter
 @Schema(description = "Generic API Response wrapper")
 public class ServiceResponse<T> {
 

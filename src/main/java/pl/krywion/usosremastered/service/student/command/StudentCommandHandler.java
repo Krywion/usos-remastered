@@ -2,12 +2,10 @@ package pl.krywion.usosremastered.service.student.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.dto.domain.StudentDto;
 import pl.krywion.usosremastered.dto.domain.mapper.StudentMapper;
-import pl.krywion.usosremastered.dto.response.ServiceResponse;
 import pl.krywion.usosremastered.entity.Student;
 import pl.krywion.usosremastered.entity.StudyPlan;
 import pl.krywion.usosremastered.entity.User;
@@ -34,20 +32,14 @@ public class StudentCommandHandler {
     private final StudentDtoValidator validator;
     private final StudentMapper mapper;
 
-    public ServiceResponse<StudentDto> handle(CreateStudentCommand command) {
+    public Student handle(CreateStudentCommand command) {
         try {
             validator.validate(command.studentDto());
 
             Student student = mapper.toEntity(command.studentDto());
             setupStudentRelations(student, command.studentDto());
 
-            Student savedStudent = studentRepository.save(student);
-
-            return ServiceResponse.success(
-                    mapper.toDto(savedStudent),
-                    "Student created successfully",
-                    HttpStatus.CREATED
-            );
+            return studentRepository.save(student);
         } catch (EntityValidationException e) {
             throw e;
         } catch (Exception e) {
@@ -56,23 +48,17 @@ public class StudentCommandHandler {
         }
     }
 
-    public ServiceResponse<StudentDto> handle(UpdateStudentCommand command) {
+    public Student handle(UpdateStudentCommand command) {
         try {
-        validator.validateForUpdate(command.studentDto(), command.albumNumber());
+            Student student = studentRepository.findById(command.albumNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            String.format("Student with album number %d not found", command.albumNumber())
+                    ));
 
-        Student student = studentRepository.findById(command.albumNumber())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Student with album number %d not found", command.albumNumber())
-                ));
+            validator.validateForUpdate(command.studentDto(), command.albumNumber());
 
-        updateStudentData(student, command.studentDto());
-        Student updatedStudent = studentRepository.save(student);
-
-        return ServiceResponse.success(
-                mapper.toDto(updatedStudent),
-                "Student updated successfully",
-                HttpStatus.OK
-        );
+            updateStudentData(student, command.studentDto());
+            return studentRepository.save(student);
         } catch (EntityValidationException e) {
             throw e;
         } catch (Exception e) {
@@ -81,7 +67,7 @@ public class StudentCommandHandler {
         }
     }
 
-    public ServiceResponse<StudentDto> handle(DeleteStudentCommand command) {
+    public Student handle(DeleteStudentCommand command) {
         Student student = studentRepository.findById(command.albumNumber())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Student with album number %d not found", command.albumNumber())
@@ -90,14 +76,10 @@ public class StudentCommandHandler {
         userService.deleteUser(student.getUser().getEmail());
         studentRepository.delete(student);
 
-        return ServiceResponse.success(
-                mapper.toDto(student),
-                "Student deleted successfully",
-                HttpStatus.OK
-        );
+        return student;
     }
 
-    public ServiceResponse<StudentDto> handle(AssignStudyPlanCommand command) {
+    public Student handle(AssignStudyPlanCommand command) {
         Student student = studentRepository.findById(command.albumNumber())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Student with album number %d not found", command.albumNumber())
@@ -106,16 +88,11 @@ public class StudentCommandHandler {
         StudyPlan studyPlan = studyPlanService.getStudyPlan(command.studyPlanId());
 
         student.getStudyPlans().add(studyPlan);
-        Student updatedStudent = studentRepository.save(student);
 
-        return ServiceResponse.success(
-                mapper.toDto(updatedStudent),
-                "Study plan assigned successfully",
-                HttpStatus.OK
-        );
+        return studentRepository.save(student);
     }
 
-    public ServiceResponse<StudentDto> handle(RemoveFromStudyPlanCommand command) {
+    public Student handle(RemoveFromStudyPlanCommand command) {
         Student student = studentRepository.findById(command.albumNumber())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Student with album number %d not found", command.albumNumber())
@@ -124,13 +101,8 @@ public class StudentCommandHandler {
         StudyPlan studyPlan = studyPlanService.getStudyPlan(command.studyPlanId());
 
         student.getStudyPlans().remove(studyPlan);
-        Student updatedStudent = studentRepository.save(student);
 
-        return ServiceResponse.success(
-                mapper.toDto(updatedStudent),
-                "Student removed from study plan successfully",
-                HttpStatus.OK
-        );
+        return studentRepository.save(student);
     }
 
     private void setupStudentRelations(Student student, StudentDto dto) {

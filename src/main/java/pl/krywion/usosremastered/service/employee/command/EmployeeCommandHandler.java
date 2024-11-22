@@ -2,16 +2,11 @@ package pl.krywion.usosremastered.service.employee.command;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
 import pl.krywion.usosremastered.dto.domain.mapper.EmployeeMapper;
-import pl.krywion.usosremastered.dto.response.ServiceResponse;
-import pl.krywion.usosremastered.entity.Course;
-import pl.krywion.usosremastered.entity.Department;
-import pl.krywion.usosremastered.entity.Employee;
-import pl.krywion.usosremastered.entity.User;
+import pl.krywion.usosremastered.entity.*;
 import pl.krywion.usosremastered.exception.EntityValidationException;
 import pl.krywion.usosremastered.exception.ResourceNotFoundException;
 import pl.krywion.usosremastered.repository.CourseRepository;
@@ -40,20 +35,14 @@ public class EmployeeCommandHandler {
     private final EmployeeDtoValidator validator;
     private final UserService userService;
 
-    public ServiceResponse<EmployeeDto> handle(CreateEmployeeCommand command) {
+    public Employee handle(CreateEmployeeCommand command) {
         try {
             validator.validate(command.employeeDto());
 
             Employee employee = mapper.toEntity(command.employeeDto());
             setupEmployeeRelation(employee, command.employeeDto());
 
-            Employee savedEmployee = employeeRepository.save(employee);
-
-            return ServiceResponse.success(
-                    mapper.toDto(savedEmployee),
-                    "Employee created successfully",
-                    HttpStatus.CREATED
-            );
+            return employeeRepository.save(employee);
         } catch (EntityValidationException e) {
             throw e;
         } catch (Exception e) {
@@ -62,7 +51,7 @@ public class EmployeeCommandHandler {
         }
     }
 
-    public ServiceResponse<EmployeeDto> handle(UpdateEmployeeCommand command) {
+    public Employee handle(UpdateEmployeeCommand command) {
         try {
             validator.validateForUpdate(command.employeeDto(), command.pesel());
 
@@ -73,13 +62,7 @@ public class EmployeeCommandHandler {
 
             updateEmployeeData(employee, command.employeeDto());
 
-            Employee updatedEmployee = employeeRepository.save(employee);
-
-            return ServiceResponse.success(
-                    mapper.toDto(updatedEmployee),
-                    "Employee updated successfully",
-                    HttpStatus.OK
-            );
+            return employeeRepository.save(employee);
         } catch (EntityValidationException e) {
             throw e;
         } catch (Exception e) {
@@ -88,7 +71,7 @@ public class EmployeeCommandHandler {
         }
     }
 
-    public ServiceResponse<EmployeeDto> handle(DeleteEmployeeCommand command) {
+    public Employee handle(DeleteEmployeeCommand command) {
         Employee employee = employeeRepository.findByPesel(command.pesel())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Employee with PESEL %s not found", command.pesel())
@@ -99,13 +82,7 @@ public class EmployeeCommandHandler {
         }
 
         employeeRepository.delete(employee);
-        log.info("Employee deleted successfully: {}", employee);
-
-        return ServiceResponse.success(
-                mapper.toDto(employee),
-                "Employee deleted successfully",
-                HttpStatus.OK
-        );
+        return employee;
     }
 
     private void setupEmployeeRelation(Employee employee, EmployeeDto dto) {
@@ -121,6 +98,8 @@ public class EmployeeCommandHandler {
                             .orElseThrow(() -> new ResourceNotFoundException(String.format("Course with id %d not found", courseId)))
                     ).toList();
             employee.setCourses(new ArrayList<>(courses));
+        } else {
+            employee.setCourses(new ArrayList<>());
         }
 
         User user = userService.createUserForEmployee(dto.getEmail());

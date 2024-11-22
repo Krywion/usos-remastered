@@ -3,7 +3,7 @@ package pl.krywion.usosremastered.service.employee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.krywion.usosremastered.dto.domain.EmployeeDto;
-import pl.krywion.usosremastered.dto.response.ServiceResponse;
+import pl.krywion.usosremastered.entity.Employee;
 import pl.krywion.usosremastered.service.EmployeeService;
 import pl.krywion.usosremastered.service.employee.command.CreateEmployeeCommand;
 import pl.krywion.usosremastered.service.employee.command.DeleteEmployeeCommand;
@@ -22,42 +22,42 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeQueryService employeeQueryService;
 
     @Override
-    public ServiceResponse<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
+    public Employee createEmployee(EmployeeDto employeeDto) {
         return employeeCommandHandler.handle(new CreateEmployeeCommand(employeeDto));
     }
 
     @Override
-    public ServiceResponse<List<EmployeeDto>> getAllEmployees() {
+    public List<Employee> getAllEmployees() {
         return employeeQueryService.findAll();
     }
 
     @Override
-    public ServiceResponse<EmployeeDto> updateEmployee(String pesel, EmployeeDto employeeDto) {
+    public Employee updateEmployee(String pesel, EmployeeDto employeeDto) {
         return employeeCommandHandler.handle(new UpdateEmployeeCommand(pesel, employeeDto));
     }
 
     @Override
-    public ServiceResponse<EmployeeDto> deleteEmployee(String pesel) {
+    public Employee deleteEmployee(String pesel) {
         return employeeCommandHandler.handle(new DeleteEmployeeCommand(pesel));
     }
 
     @Override
-    public ServiceResponse<EmployeeDto> getEmployeeByEmail(String email) {
+    public Employee getEmployeeByEmail(String email) {
         return employeeQueryService.findByEmail(email);
     }
 
     @Override
-    public ServiceResponse<List<EmployeeDto>> getEmployeesByLastName(String lastName) {
+    public List<Employee> getEmployeesByLastName(String lastName) {
         return employeeQueryService.findByLastName(lastName);
     }
 
     @Override
-    public ServiceResponse<EmployeeDto> getEmployeeByPesel(String pesel) {
+    public Employee getEmployeeByPesel(String pesel) {
         return employeeQueryService.findByPesel(pesel);
     }
 
     @Override
-    public ServiceResponse<List<EmployeeDto>> getEmployeeByFirstName(String firstName) {
+    public List<Employee> getEmployeeByFirstName(String firstName) {
         return employeeQueryService.findByFirstName(firstName);
     }
 }

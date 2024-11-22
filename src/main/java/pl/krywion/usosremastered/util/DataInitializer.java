@@ -3,6 +3,7 @@ package pl.krywion.usosremastered.util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pl.krywion.usosremastered.config.security.Role;
 import pl.krywion.usosremastered.dto.auth.RegisterUserDto;
@@ -15,6 +16,7 @@ import pl.krywion.usosremastered.service.OrganizationalStructureService;
 import pl.krywion.usosremastered.service.StudyPlanService;
 
 @Component
+@Profile("!test")
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 

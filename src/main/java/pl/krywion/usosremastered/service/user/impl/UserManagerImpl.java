@@ -24,6 +24,7 @@ public class UserManagerImpl implements UserManager {
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User not found with email: " + email));
         userRepository.delete(user);
+        notificationService.sendAccountDeleteNotification(user.getEmail());
     }
 
     @Override
@@ -34,6 +35,7 @@ public class UserManagerImpl implements UserManager {
             throw new ValidationException("User with email: " + newEmail + " already exists");
         }
         user.setEmail(newEmail);
+        notificationService.sendAccountUpdateNotification(user.getEmail(), "Your email has been updated");
 
         return userRepository.save(user);
     }

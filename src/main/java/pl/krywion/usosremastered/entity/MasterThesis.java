@@ -27,7 +27,7 @@ public class MasterThesis extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name = "promoter_id")
-    private Employee promoter;
+    private Promoter promoter;
 
     @Override
     public String getIdentifier() {

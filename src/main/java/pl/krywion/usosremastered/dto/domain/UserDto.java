@@ -17,7 +17,4 @@ public class UserDto {
         this.role = role;
     }
 
-    public UserDto() {
-    }
-
 }

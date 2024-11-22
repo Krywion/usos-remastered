@@ -1,14 +1,13 @@
 package pl.krywion.usosremastered.service.employee.query;
 
-import pl.krywion.usosremastered.dto.domain.EmployeeDto;
-import pl.krywion.usosremastered.dto.response.ServiceResponse;
+import pl.krywion.usosremastered.entity.Employee;
 
 import java.util.List;
 
 public interface EmployeeQueryService {
-    ServiceResponse<List<EmployeeDto>> findAll();
-    ServiceResponse<EmployeeDto> findByPesel(String pesel);
-    ServiceResponse<EmployeeDto> findByEmail(String email);
-    ServiceResponse<List<EmployeeDto>> findByLastName(String lastName);
-    ServiceResponse<List<EmployeeDto>> findByFirstName(String firstName);
+    List<Employee> findAll();
+    Employee findByPesel(String pesel);
+    Employee findByEmail(String email);
+    List<Employee>  findByLastName(String lastName);
+    List<Employee>  findByFirstName(String firstName);
 }

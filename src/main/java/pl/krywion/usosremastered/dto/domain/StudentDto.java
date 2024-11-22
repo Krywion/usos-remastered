@@ -2,16 +2,12 @@ package pl.krywion.usosremastered.dto.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@ToString
 @Schema(description = "Student Data Transfer Object")
 public class StudentDto {
 
